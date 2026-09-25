@@ -1,0 +1,47 @@
+---
+import { Image } from 'astro:assets';
+import type { Person } from '../data/people';
+import ArrowUpRight from './icons/ArrowUpRight.astro';
+import CuratorBadge from './CuratorBadge.astro';
+
+interface Props {
+  person: Person;
+  curator?: boolean;
+}
+
+const { person: p, curator = false } = Astro.props;
+---
+
+<div
+  data-reveal
+  data-person
+  data-name={p.name}
+  data-studio={p.studio}
+  data-category={p.category}
+  data-city={p.city}
+  class="grid translate-y-2.5 grid-cols-[56px_minmax(0,1fr)] items-start gap-x-4 gap-y-2 border-b border-ardi-stone py-3 opacity-0 transition-[opacity,translate] duration-600 ease-reveal data-revealed:translate-y-0 data-revealed:opacity-100 md:grid-cols-[56px_minmax(0,320px)_100px_minmax(150px,1fr)_228px] md:items-center md:gap-5"
+>
+  <div class="relative row-[1/span_3] box-content size-14 overflow-hidden border border-ardi-stone bg-ardi-grey md:row-auto">
+    <Image src={p.img} alt="" width={112} class="block size-full object-cover" />
+  </div>
+  <div class:list={['flex min-w-0 flex-wrap gap-3', curator ? 'items-center' : 'items-baseline']}>
+    <span class="font-title text-[24px] leading-title font-black tracking-title uppercase">{p.name}</span>
+  </div>
+  <div class="flex flex-wrap items-center gap-2.5 md:contents">
+    {
+      curator ? (
+        <div>
+          <CuratorBadge />
+        </div>
+      ) : (
+        <div class="hidden md:block" />
+      )
+    }
+    <div class="text-[10.5px] font-bold tracking-[.14em] text-ardi-blue uppercase">{p.category}</div>
+  </div>
+  <div class="flex gap-[18px] text-[13px] whitespace-nowrap">
+    <a href={p.website} target="_blank" rel="noopener" class="inline-flex items-center gap-[5px]">Site <ArrowUpRight size={10} /></a>
+    <a href={p.mailto} class="inline-flex items-center gap-[5px]">Email <ArrowUpRight size={10} /></a>
+    <a href={p.tel} class="tabular-nums">{p.phone}</a>
+  </div>
+</div>

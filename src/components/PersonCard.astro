@@ -1,0 +1,57 @@
+---
+import { Image } from 'astro:assets';
+import type { Person } from '../data/people';
+import ArrowUpRight from './icons/ArrowUpRight.astro';
+import CuratorBadge from './CuratorBadge.astro';
+
+interface Props {
+  person: Person;
+  curator?: boolean;
+}
+
+const { person: p, curator = false } = Astro.props;
+---
+
+<article
+  data-reveal
+  data-person
+  data-name={p.name}
+  data-studio={p.studio}
+  data-category={p.category}
+  data-city={p.city}
+  class="translate-y-5 opacity-0 transition-[opacity,translate] duration-750 ease-reveal data-revealed:translate-y-0 data-revealed:opacity-100"
+>
+  <div class="border border-ardi-stone bg-ardi-paper">
+    <div class="relative aspect-square overflow-hidden bg-ardi-grey">
+      <Image
+        src={p.img}
+        alt={p.name}
+        widths={[320, 480, 640]}
+        sizes="(min-width: 1600px) 20vw, (min-width: 1200px) 25vw, (min-width: 760px) 33vw, 100vw"
+        class="block size-full object-cover"
+      />
+      {
+        curator && (
+          <span class="absolute top-0 right-0">
+            <CuratorBadge />
+          </span>
+        )
+      }
+    </div>
+    <div class="@container px-[22px] pt-[26px] pb-[22px]">
+      <h2 class="m-0 min-h-[1.8em] font-title text-[27.2px] leading-title font-black tracking-title text-balance uppercase">
+        {p.name}
+      </h2>
+      <div class="mt-[22px] flex items-baseline justify-between gap-3">
+        <span class="text-[11px] font-bold tracking-[.14em] text-ardi-blue uppercase">{p.category}</span>
+        <span class="text-right text-[15px]">{p.city}</span>
+      </div>
+      <div class="mt-5 mb-4 h-px bg-ardi-stone"></div>
+      <div class="grid grid-cols-[auto_auto_minmax(0,1fr)] items-center gap-x-3 gap-y-2.5 text-[12.5px] @max-[250px]:grid-cols-[auto_auto] @max-[250px]:justify-start">
+        <a href={p.website} target="_blank" rel="noopener" class="inline-flex items-center gap-[5px] whitespace-nowrap">Site <ArrowUpRight /></a>
+        <a href={p.mailto} class="inline-flex items-center gap-[5px] whitespace-nowrap">Email <ArrowUpRight /></a>
+        <a href={p.tel} class="min-w-0 text-right whitespace-nowrap tabular-nums @max-[250px]:col-span-full @max-[250px]:text-left">{p.phone}</a>
+      </div>
+    </div>
+  </div>
+</article>

@@ -1,0 +1,37 @@
+---
+import { CITIES, PEOPLE } from '../data/people';
+import { profilesLabel } from '../data/labels';
+import PersonCard from './PersonCard.astro';
+import PersonRow from './PersonRow.astro';
+
+const groups = CITIES.map((city) => ({ city, items: PEOPLE.filter((p) => p.city === city) }));
+---
+
+<main class="mx-auto max-w-[1800px] px-4 pb-[70px] md:px-10">
+  <div data-content class="transition-[opacity,translate] duration-260 ease-in-out">
+    <div data-directory-view="cards" class="grid grid-cols-1 gap-10 md:grid-cols-3 md:gap-x-7 md:gap-y-14 xl:grid-cols-4 2xl:grid-cols-5">
+      {PEOPLE.map((p) => <PersonCard person={p} />)}
+    </div>
+
+    <div data-directory-view="list" hidden>
+      {
+        groups.map((g) => (
+          <section data-group class="flex flex-col gap-5 pt-4 pb-5 md:pt-9 md:pb-10 nth-[1_of_:not([hidden])]:pt-0">
+            <div data-group-heading class="flex items-baseline gap-3">
+              <h2 class="m-0 font-title text-[28px] leading-title font-black tracking-title uppercase md:text-[34px]">{g.city}</h2>
+              <span data-group-count class="text-[11px] tracking-[.12em] text-ardi-slate">{profilesLabel(g.items.length)}</span>
+            </div>
+            <div>
+              {g.items.map((p) => <PersonRow person={p} />)}
+            </div>
+          </section>
+        ))
+      }
+    </div>
+
+    <div data-empty hidden class="py-20 text-center">
+      <p class="m-0 mb-[18px] font-subhead text-[28px] leading-subhead font-semibold tracking-subhead text-ardi-black">Nimeni nu se potrivește încă.</p>
+      <button type="button" data-reset class="border border-ardi-stone bg-transparent px-5 py-2.5 text-[11px] tracking-[.12em] uppercase">Șterge filtrele</button>
+    </div>
+  </div>
+</main>

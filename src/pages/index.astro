@@ -1,0 +1,22 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Directory from '../components/Directory.astro';
+import FilterMenu from '../components/FilterMenu.astro';
+import Footer from '../components/Footer.astro';
+import Header from '../components/Header.astro';
+import Hero from '../components/Hero.astro';
+import Partners from '../components/Partners.astro';
+---
+
+<Layout title="Arhitecți & Designeri — ARDI" description="Oamenii care dau formă spațiilor în care ne adunăm.">
+  <Header />
+  <Hero />
+  <Directory />
+  <Partners />
+  <Footer />
+  <FilterMenu />
+</Layout>
+
+<script>
+  import '../scripts/directory';
+</script>
