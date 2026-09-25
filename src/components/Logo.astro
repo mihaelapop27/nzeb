@@ -1,0 +1,20 @@
+---
+import mark from '../assets/logo/ardi-logo-mark.png';
+import lockup from '../assets/logo/ardi-logo-lockup.png';
+
+interface Props {
+  variant: 'mark' | 'lockup';
+  class?: string;
+}
+
+const { variant, class: className } = Astro.props;
+// The logo PNG is used as a mask so it takes the current text colour.
+const src = variant === 'mark' ? mark.src : lockup.src;
+const position = variant === 'mark' ? 'center' : 'left center';
+---
+
+<span
+  class:list={['block bg-current', className]}
+  style={`-webkit-mask:url(${src}) no-repeat ${position}/contain;mask:url(${src}) no-repeat ${position}/contain`}
+  role="img"
+  aria-hidden="true"></span>

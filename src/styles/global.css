@@ -1,0 +1,60 @@
+@import "tailwindcss";
+
+/* ARDI Design System tokens — see docs/ARDIDesignSystem/tokens/ */
+@theme {
+  --breakpoint-*: initial;
+  --breakpoint-md: 760px;
+  --breakpoint-lg: 960px;
+  --breakpoint-xl: 1200px;
+  --breakpoint-2xl: 1600px;
+
+  --font-title: "Nunito Sans", "Helvetica Neue", Helvetica, sans-serif;
+  --font-subhead: "Merriweather Sans", "Helvetica Neue", Helvetica, sans-serif;
+  --font-body: "Hind Vadodara", "Helvetica Neue", Helvetica, sans-serif;
+
+  --leading-title: 0.9;
+  --leading-subhead: 1.1;
+  --tracking-title: -0.01em;
+  --tracking-subhead: -0.01em;
+
+  --color-ardi-orange: #ff5c01;
+  --color-ardi-blue: #3c1dee;
+  --color-ardi-lime: #cbff2e;
+  --color-ardi-mint: #66ddc9;
+  --color-ardi-violet: #863dff;
+  --color-ardi-stone: #cecac8;
+  --color-ardi-grey: #e6e6e6;
+  --color-ardi-slate: #303535;
+  --color-ardi-black: #000000;
+  --color-ardi-ink: #141a1c;
+  --color-ardi-paper: #ffffff;
+  --color-ardi-muted: #8a8582;
+
+  /* active filter chips */
+  --color-chip: #161513;
+  --color-chip-fg: #f7f6f2;
+
+  --ease-reveal: cubic-bezier(0.2, 0.65, 0.2, 1);
+}
+
+@layer base {
+  /* The design relies on browser-default line height, not preflight's 1.5. */
+  html {
+    line-height: normal;
+  }
+  body {
+    @apply bg-ardi-paper font-body font-normal text-ardi-black antialiased;
+  }
+  a {
+    @apply text-ardi-black no-underline hover:text-ardi-blue;
+  }
+  button {
+    @apply cursor-pointer font-bold;
+  }
+  input::placeholder {
+    @apply text-ardi-slate;
+  }
+  select {
+    @apply appearance-none;
+  }
+}

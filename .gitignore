@@ -143,3 +143,9 @@ vite.config.ts.timestamp-*
 .vite/
 
 docs
+
+# Astro
+.astro/
+
+# Playwright MCP scratch output
+.playwright-mcp/

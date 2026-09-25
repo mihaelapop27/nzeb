@@ -1,0 +1,132 @@
+---
+import { CATEGORIES, CITIES } from '../data/people';
+import Logo from './Logo.astro';
+import Search from './icons/Search.astro';
+---
+
+<header class="sticky top-0 z-20 border-b border-ardi-stone bg-ardi-paper">
+  <div class="mx-auto grid h-16 max-w-[1800px] grid-cols-[auto_minmax(0,1fr)] items-center gap-4 px-4 md:px-10 lg:grid-cols-[auto_minmax(0,1fr)_auto_minmax(0,1fr)_auto] lg:gap-7">
+    <a href="#" aria-label="ARDI" class="inline-flex items-center leading-none text-ardi-black transition-colors duration-200 hover:text-ardi-blue">
+      <Logo variant="mark" class="h-5 w-[74px] lg:h-6 lg:w-[88px]" />
+    </a>
+    <label class="hidden max-w-[340px] min-w-0 items-center gap-2.5 border-b border-ardi-stone py-2 lg:flex">
+      <Search />
+      <input type="text" data-search placeholder="Caută nume sau studio" class="min-w-0 flex-1 border-0 bg-transparent p-0 text-[14px] outline-0" />
+    </label>
+    <div class="hidden items-center gap-5 justify-self-center lg:flex">
+      <div class="flex gap-0.5 border border-ardi-stone p-[3px]">
+        {
+          CATEGORIES.map((c) => (
+            <button
+              type="button"
+              data-cat={c.value}
+              aria-pressed={c.value === 'all' ? 'true' : 'false'}
+              class="bg-transparent px-3.5 py-1.5 text-[11px] font-bold tracking-[.1em] text-chip uppercase transition-colors duration-200 aria-pressed:bg-chip aria-pressed:text-chip-fg"
+            >
+              {c.label}
+            </button>
+          ))
+        }
+      </div>
+      <div data-city-dropdown class="relative">
+        <button
+          type="button"
+          data-city-trigger
+          aria-haspopup="listbox"
+          aria-expanded="false"
+          aria-controls="city-listbox"
+          aria-label="Oraș"
+          class="group flex items-center gap-2.5 border-0 border-b border-ardi-stone bg-transparent py-2 text-[11px] font-bold tracking-[.1em] text-chip uppercase transition-colors duration-200 hover:border-ardi-black aria-expanded:border-ardi-black"
+        >
+          <span data-city-current>Toate orașele</span>
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.3" class="opacity-60 transition-transform duration-200 group-aria-expanded:rotate-180"><path d="M2.5 4.5 6 8l3.5-3.5"></path></svg>
+        </button>
+        <ul
+          id="city-listbox"
+          role="listbox"
+          aria-label="Oraș"
+          tabindex="-1"
+          data-city-list
+          hidden
+          class="absolute top-full left-0 z-30 mt-[15px] flex max-h-[min(420px,70vh)] min-w-[220px] flex-col gap-0.5 overflow-auto border border-ardi-stone bg-ardi-paper p-[3px] outline-0"
+        >
+          {
+            ['all', ...CITIES].map((city, i) => (
+              <li
+                id={`city-opt-${i}`}
+                role="option"
+                data-city-option={city}
+                aria-selected={city === 'all' ? 'true' : 'false'}
+                class="flex cursor-pointer items-center justify-between gap-4 px-3.5 py-2 text-[14px] whitespace-nowrap transition-colors duration-150 data-active:not-aria-selected:bg-[rgba(22,21,19,.09)] aria-selected:bg-chip aria-selected:text-chip-fg"
+              >
+                {city === 'all' ? 'Toate orașele' : city}
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </div>
+    <div class="hidden min-w-0 lg:block"></div>
+    <div class="flex flex-none items-center gap-0.5 justify-self-end">
+      <button
+        type="button"
+        data-search-open
+        aria-label="Caută"
+        title="Caută"
+        aria-expanded="false"
+        class="relative mr-1 grid size-9 place-items-center border-0 bg-transparent text-chip lg:hidden"
+      >
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="7" cy="7" r="5"></circle><path d="M11 11l3.5 3.5"></path></svg>
+        <span data-search-dot hidden class="absolute top-[7px] right-[6px] size-[7px] rounded-full bg-ardi-blue"></span>
+      </button>
+      <button
+        type="button"
+        data-menu-open
+        aria-label="Filtre"
+        title="Filtre"
+        class="mr-2.5 flex h-9 items-center gap-2 border border-ardi-stone bg-transparent pr-3 pl-2.5 text-[11px] tracking-[.1em] uppercase lg:hidden"
+      >
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><path d="M2 4.5h12M4 8h8M6.5 11.5h3"></path></svg>
+        <span data-filters-label>Filtre</span>
+      </button>
+      <button
+        type="button"
+        data-view-btn="cards"
+        aria-pressed="true"
+        aria-label="Vizualizare carduri"
+        title="Carduri"
+        class="grid size-9 place-items-center border-0 bg-transparent text-chip transition-colors duration-200 aria-pressed:bg-[rgba(22,21,19,.09)]"
+      >
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="2" y="2" width="5" height="5"></rect><rect x="9" y="2" width="5" height="5"></rect><rect x="2" y="9" width="5" height="5"></rect><rect x="9" y="9" width="5" height="5"></rect></svg>
+      </button>
+      <button
+        type="button"
+        data-view-btn="list"
+        aria-pressed="false"
+        aria-label="Vizualizare listă"
+        title="Listă"
+        class="-mr-2.5 grid size-9 place-items-center border-0 bg-transparent text-chip transition-colors duration-200 aria-pressed:bg-[rgba(22,21,19,.09)] lg:mr-0"
+      >
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M2 4h12M2 8h12M2 12h12"></path></svg>
+      </button>
+    </div>
+  </div>
+  <!-- Mobile: search expands in place over the header row. -->
+  <div
+    data-search-bar
+    class="invisible absolute inset-x-0 top-0 flex h-16 items-center gap-2.5 bg-ardi-paper px-4 opacity-0 transition-[opacity,visibility] duration-200 data-open:visible data-open:opacity-100 md:px-10 lg:hidden"
+  >
+    <Search size={16} />
+    <input
+      type="text"
+      data-search
+      enterkeyhint="search"
+      aria-label="Caută nume sau studio"
+      placeholder="Caută nume sau studio"
+      class="min-w-0 flex-1 border-0 bg-transparent p-0 text-[16px] outline-0"
+    />
+    <button type="button" data-search-close aria-label="Închide căutarea" class="-mr-2.5 grid size-9 flex-none place-items-center border-0 bg-transparent">
+      <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M4 4l10 10M14 4 4 14"></path></svg>
+    </button>
+  </div>
+</header>

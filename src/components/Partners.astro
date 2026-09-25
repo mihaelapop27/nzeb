@@ -1,0 +1,45 @@
+---
+import { PARTNERS } from '../data/people';
+import { partnersLabel } from '../data/labels';
+---
+
+<section id="parteneri" class="bg-ardi-grey">
+  <div class="mx-auto max-w-[1800px] px-4 py-[clamp(48px,6vw,90px)] md:px-10">
+    <div class="flex items-baseline justify-between gap-4 border-t border-ardi-black pt-3.5 whitespace-nowrap">
+      <span class="text-[11px] font-bold tracking-[.14em] text-ardi-blue uppercase">Parteneri</span>
+      <span class="text-[11px] tracking-[.12em] text-ardi-slate uppercase">{partnersLabel(PARTNERS.length)}</span>
+    </div>
+    <div class="mt-8 grid grid-cols-2 gap-4 pr-1 pb-1 md:grid-cols-3 xl:grid-cols-4">
+      {
+        PARTNERS.map((p) => (
+          <div
+            data-reveal
+            class:list={[
+              'relative box-content grid translate-y-4 place-items-center border border-transparent bg-ardi-paper opacity-0 shadow-[4px_4px_0_0_var(--color-ardi-stone)] transition-[opacity,translate] duration-600 ease-reveal data-revealed:translate-y-0 data-revealed:opacity-100',
+              p.main ? 'col-span-2 aspect-5/2 md:row-span-2 md:aspect-auto' : 'aspect-5/2',
+            ]}
+          >
+            <span class:list={['px-5 text-center font-[ui-monospace,Menlo,monospace] tracking-[.08em] text-ardi-muted uppercase', p.main ? 'text-[14px]' : 'text-[12px]']}>{p.label}</span>
+            {
+              p.main && (
+                <span class="absolute top-0 right-0 bg-ardi-blue px-3 py-[7px] text-[10.5px] leading-none font-bold tracking-[.14em] text-ardi-paper uppercase">
+                  Partener principal
+                </span>
+              )
+            }
+          </div>
+        ))
+      }
+    </div>
+    <div class="mt-9 flex justify-end">
+      <a
+        href="#"
+        data-back-to-top
+        class="inline-flex items-center gap-[7px] text-[11px] font-bold tracking-[.14em] whitespace-nowrap text-ardi-blue uppercase"
+      >
+        Înapoi sus
+        <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M5 9V1M2 4l3-3 3 3"></path></svg>
+      </a>
+    </div>
+  </div>
+</section>
