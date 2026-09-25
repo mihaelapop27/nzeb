@@ -1,6 +1,6 @@
 ---
 import { Image } from 'astro:assets';
-import type { Person } from '../data/people';
+import { CATEGORIES, type Person } from '../data/people';
 import ArrowUpRight from './icons/ArrowUpRight.astro';
 import CuratorBadge from './CuratorBadge.astro';
 
@@ -10,6 +10,8 @@ interface Props {
 }
 
 const { person: p, curator = false } = Astro.props;
+// Mobile rows use the short role name (e.g. "Designer"), as in the header's role picker.
+const shortCategory = CATEGORIES.find((c) => c.value === p.category)?.label ?? p.category;
 ---
 
 <div
@@ -19,7 +21,7 @@ const { person: p, curator = false } = Astro.props;
   data-studio={p.studio}
   data-category={p.category}
   data-city={p.city}
-  class="grid translate-y-2.5 grid-cols-[56px_minmax(0,1fr)] items-start gap-x-4 gap-y-2 border-b border-ardi-stone py-3 opacity-0 transition-[opacity,translate] duration-600 ease-reveal data-revealed:translate-y-0 data-revealed:opacity-100 md:grid-cols-[56px_minmax(0,320px)_100px_minmax(150px,1fr)_228px] md:items-center md:gap-5"
+  class="grid translate-y-2.5 grid-cols-[56px_minmax(0,1fr)] items-start gap-x-4 gap-y-2 border-b border-ardi-stone py-3 opacity-0 transition-[opacity,translate] duration-600 ease-reveal data-revealed:translate-y-0 data-revealed:opacity-100 md:grid-cols-[56px_minmax(0,320px)_100px_minmax(150px,1fr)_130px_228px] md:items-center md:gap-5"
 >
   <div class="relative row-[1/span_3] box-content size-14 overflow-hidden border border-ardi-stone bg-ardi-grey md:row-auto">
     <Image src={p.img} alt="" width={112} class="block size-full object-cover" />
@@ -37,7 +39,10 @@ const { person: p, curator = false } = Astro.props;
         <div class="hidden md:block" />
       )
     }
-    <div class="text-[10.5px] font-bold tracking-[.14em] text-ardi-blue uppercase">{p.category}</div>
+    <div class="text-[10.5px] font-bold tracking-[.14em] text-ardi-blue uppercase">
+      <span class="md:hidden">{shortCategory}</span><span class="hidden md:inline">{p.category}</span>
+    </div>
+    <div class="text-[14px]">{p.city}</div>
   </div>
   <div class="flex gap-[18px] text-[13px] whitespace-nowrap">
     <a href={p.website} target="_blank" rel="noopener" class="inline-flex items-center gap-[5px]">Site <ArrowUpRight size={10} /></a>

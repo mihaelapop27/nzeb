@@ -79,13 +79,6 @@ const render = () => {
   const shown = cards.filter(matches);
   cards.forEach((el) => (el.hidden = !shown.includes(el)));
   $$('[data-directory-view="list"] [data-person]').forEach((el) => (el.hidden = !matches(el)));
-  $$('[data-group]').forEach((group) => {
-    const n = $$('[data-person]:not([hidden])', group).length;
-    group.hidden = n === 0;
-    group.querySelector('[data-group-count]')!.textContent = profilesLabel(n);
-    // With a single city selected, its heading would just repeat the filter.
-    group.querySelector<HTMLElement>('[data-group-heading]')!.hidden = city !== 'all';
-  });
 
   const n = shown.length;
   $('[data-directory-view="cards"]').hidden = !isCards || n === 0;
