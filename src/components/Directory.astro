@@ -1,10 +1,7 @@
 ---
-import { CITIES, PEOPLE } from '../data/people';
-import { profilesLabel } from '../data/labels';
+import { PEOPLE } from '../data/people';
 import PersonCard from './PersonCard.astro';
 import PersonRow from './PersonRow.astro';
-
-const groups = CITIES.map((city) => ({ city, items: PEOPLE.filter((p) => p.city === city) }));
 ---
 
 <main class="mx-auto max-w-[1800px] px-4 pb-[70px] md:px-10">
@@ -13,20 +10,8 @@ const groups = CITIES.map((city) => ({ city, items: PEOPLE.filter((p) => p.city 
       {PEOPLE.map((p) => <PersonCard person={p} />)}
     </div>
 
-    <div data-directory-view="list" hidden>
-      {
-        groups.map((g) => (
-          <section data-group class="flex flex-col gap-5 pt-4 pb-5 md:pt-9 md:pb-10 nth-[1_of_:not([hidden])]:pt-0">
-            <div data-group-heading class="flex items-baseline gap-3">
-              <h2 class="m-0 font-title text-[28px] leading-title font-black tracking-title uppercase md:text-[34px]">{g.city}</h2>
-              <span data-group-count class="text-[11px] tracking-[.12em] text-ardi-slate">{profilesLabel(g.items.length)}</span>
-            </div>
-            <div>
-              {g.items.map((p) => <PersonRow person={p} />)}
-            </div>
-          </section>
-        ))
-      }
+    <div data-directory-view="list" hidden class="-mt-4">
+      {PEOPLE.map((p) => <PersonRow person={p} />)}
     </div>
 
     <div data-empty hidden class="py-20 text-center">
