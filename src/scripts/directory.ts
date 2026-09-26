@@ -132,9 +132,47 @@ const render = () => {
   observe();
 };
 
+/* ── Filters in the address ──────────────────────────────────────
+   ?categorie=arhitect&oras=cluj-napoca&cautare=popa — readable, without diacritics.
+   replaceState keeps one history entry, so Back still leaves the page in one step. */
+
+const slug = (s: string) =>
+  s
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .trim()
+    .replace(/\s+/g, '-');
+
+// Built from the header controls, so the lists always match what the page offers.
+const catSlugs = new Map($$('header [data-cat]').map((b) => [b.dataset.cat!, slug(b.textContent!)]));
+const citySlugs = new Map($$('[data-city-option]').map((o) => [o.dataset.cityOption!, slug(o.dataset.cityOption!)]));
+const fromSlug = (slugs: Map<string, string>, value: string | null) =>
+  [...slugs].find(([, s]) => s === slug(value ?? ''))?.[0] ?? 'all';
+
+const readUrl = () => {
+  const params = new URLSearchParams(location.search);
+  return {
+    q: params.get('cautare') ?? '',
+    cat: fromSlug(catSlugs, params.get('categorie')),
+    city: fromSlug(citySlugs, params.get('oras')),
+  };
+};
+
+const writeUrl = () => {
+  const params = new URLSearchParams();
+  if (state.cat !== 'all') params.set('categorie', catSlugs.get(state.cat)!);
+  if (state.city !== 'all') params.set('oras', citySlugs.get(state.city)!);
+  if (state.q.trim()) params.set('cautare', state.q.trim());
+  const query = params.toString();
+  const url = location.pathname + (query ? `?${query}` : '') + location.hash;
+  if (url !== location.pathname + location.search + location.hash) history.replaceState(history.state, '', url);
+};
+
 const setState = (patch: Partial<typeof state>) => {
   Object.assign(state, patch);
   render();
+  writeUrl();
 };
 
 /* ── Menu, view toggle, navigation ─────────────────────────────── */
@@ -331,4 +369,7 @@ $('[data-back-to-top]').addEventListener('click', (e) => {
   window.scrollTo({ top: 0, behavior: 'smooth' });
 });
 
+// Start from the filters in the address (shared or bookmarked links), then tidy the address.
+Object.assign(state, readUrl());
 render();
+writeUrl();
