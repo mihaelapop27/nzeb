@@ -1,4 +1,4 @@
-import { profilesLabel } from '../data/labels';
+import { profilesLabel, showProfilesLabel } from '../data/labels';
 
 type View = 'cards' | 'list';
 
@@ -97,7 +97,7 @@ const render = () => {
   // Labels
   const nFilters = (cat !== 'all' ? 1 : 0) + (city !== 'all' ? 1 : 0);
   setText('[data-count]', profilesLabel(n));
-  setText('[data-show-label]', n === 0 ? 'Nimic de arătat' : 'Arată ' + profilesLabel(n));
+  setText('[data-show-label]', n === 0 ? 'Niciun profil găsit' : showProfilesLabel(n));
   setText('[data-filters-label]', 'Filtre' + (nFilters ? ` (${nFilters})` : ''));
   setText('[data-reset-label]', nFilters + (q !== '' ? 1 : 0) === 1 ? 'Resetează filtrul' : 'Resetează filtrele');
   $('[data-reset-row]').hidden = q === '' && cat === 'all' && city === 'all';

@@ -1,10 +1,10 @@
 ---
 import { CATEGORIES, CITIES, PEOPLE } from '../data/people';
-import { profilesLabel } from '../data/labels';
+import { showProfilesLabel } from '../data/labels';
 import Logo from './Logo.astro';
 
 const heading = 'text-[10.5px] tracking-[.14em] text-ardi-slate uppercase';
-const chip = 'border border-ardi-stone bg-transparent px-[18px] py-[11px] text-chip transition-colors duration-200 aria-pressed:bg-chip aria-pressed:text-chip-fg';
+const chip = 'border border-ardi-stone bg-transparent px-2 py-[11px] text-center whitespace-nowrap text-chip transition-colors duration-200 aria-pressed:bg-chip aria-pressed:text-chip-fg';
 ---
 
 <div data-menu hidden class="fixed inset-0 z-40 flex flex-col overflow-auto bg-ardi-paper">
@@ -30,7 +30,7 @@ const chip = 'border border-ardi-stone bg-transparent px-[18px] py-[11px] text-c
           <span data-menu-reset-label>Resetează filtrele</span>
         </button>
       </div>
-      <div class="flex flex-wrap gap-2">
+      <div class="grid grid-cols-3 gap-2">
         {
           CATEGORIES.map((c) => (
             <button type="button" data-cat={c.value} aria-pressed={c.value === 'all' ? 'true' : 'false'} class:list={[chip, 'text-[12px] tracking-[.08em] uppercase']}>
@@ -42,7 +42,7 @@ const chip = 'border border-ardi-stone bg-transparent px-[18px] py-[11px] text-c
     </div>
     <div class="flex flex-col gap-3.5">
       <div class={heading}>Oraș</div>
-      <div class="flex flex-wrap gap-2">
+      <div class="grid grid-cols-3 gap-2">
         {
           ['all', ...CITIES].map((city) => (
             <button type="button" data-city={city} aria-pressed={city === 'all' ? 'true' : 'false'} class:list={[chip, 'text-[13px]']}>
@@ -58,7 +58,7 @@ const chip = 'border border-ardi-stone bg-transparent px-[18px] py-[11px] text-c
       data-show-label
       class="mt-auto border-0 bg-ardi-black px-6 py-4 text-[12px] tracking-[.12em] text-ardi-paper uppercase"
     >
-      Arată {profilesLabel(PEOPLE.length)}
+      {showProfilesLabel(PEOPLE.length)}
     </button>
   </div>
 </div>
