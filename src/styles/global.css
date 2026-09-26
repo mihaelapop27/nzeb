@@ -1,5 +1,33 @@
 @import "tailwindcss";
 
+/* Metric-matched stand-in while Hind Vadodara loads: width via size-adjust (plain Helvetica Neue runs ~8% wider),
+   vertical metrics via overrides (Hind is 1.125em ascent / 0.373em descent; overrides get scaled by size-adjust). */
+@font-face {
+  font-family: "Hind Vadodara Fallback";
+  src: local("Helvetica Neue"), local("HelveticaNeue"), local("Arial");
+  font-weight: 400;
+  size-adjust: 92.4%;
+  ascent-override: 121.75%;
+  descent-override: 40.37%;
+  line-gap-override: 0%;
+}
+@font-face {
+  font-family: "Hind Vadodara Fallback";
+  src: local("Helvetica Neue Bold"), local("HelveticaNeue-Bold"), local("Arial Bold"), local("Arial-BoldMT");
+  font-weight: 700;
+  size-adjust: 92.4%;
+  ascent-override: 121.75%;
+  descent-override: 40.37%;
+  line-gap-override: 0%;
+}
+
+/* Font stacks come from the Astro Fonts API — see astro.config.mjs */
+@theme inline {
+  --font-title: var(--font-nunito-sans);
+  --font-subhead: var(--font-merriweather-sans);
+  --font-body: var(--font-hind-vadodara);
+}
+
 /* ARDI Design System tokens — see docs/ARDIDesignSystem/tokens/ */
 @theme {
   --breakpoint-*: initial;
@@ -7,10 +35,6 @@
   --breakpoint-lg: 960px;
   --breakpoint-xl: 1200px;
   --breakpoint-2xl: 1600px;
-
-  --font-title: "Nunito Sans", "Helvetica Neue", Helvetica, sans-serif;
-  --font-subhead: "Merriweather Sans", "Helvetica Neue", Helvetica, sans-serif;
-  --font-body: "Hind Vadodara", "Helvetica Neue", Helvetica, sans-serif;
 
   --leading-title: 0.9;
   --leading-subhead: 1.1;
@@ -56,5 +80,25 @@
   }
   select {
     @apply appearance-none;
+  }
+}
+
+/* Hero entrance — held until the webfonts are in (inline script in Layout.astro), so the swap happens unseen.
+   A keyframe animation (not a transition) so it also plays when the fonts are ready before first paint. */
+@keyframes hero-in {
+  from { opacity: 0; }
+}
+@keyframes hero-in-rise {
+  from { opacity: 0; translate: 0 12px; }
+}
+html[data-fonts='loading'] [data-hero-reveal] {
+  opacity: 0;
+}
+html[data-fonts='ready'] [data-hero-reveal] {
+  animation: hero-in 700ms var(--ease-reveal) calc(var(--i, 0) * 90ms) both;
+}
+@media (prefers-reduced-motion: no-preference) {
+  html[data-fonts='ready'] [data-hero-reveal] {
+    animation-name: hero-in-rise;
   }
 }
