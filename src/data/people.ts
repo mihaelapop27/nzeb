@@ -82,8 +82,11 @@ export const CITIES = [...new Set(DATA.map((p) => p.city))].sort((a, b) => a.loc
 export const CATEGORIES = [
   { value: 'all', label: 'Toți', longLabel: 'Toți' },
   { value: 'Arhitect', label: 'Arhitect', longLabel: 'Arhitecți' },
-  { value: 'Designer de interior', label: 'Designer', longLabel: 'Designeri de interior' },
+  { value: 'Designer de interior', label: 'Designer', longLabel: 'Designeri' },
 ];
+
+// Profiles show the short role name (e.g. "Designer"), as in the header's role picker.
+export const shortCategory = (category: string) => CATEGORIES.find((c) => c.value === category)?.label ?? category;
 
 // Partners are festival-wide, not per city; the first one is the main partner.
 export const PARTNERS = [

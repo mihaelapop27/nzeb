@@ -1,6 +1,6 @@
 ---
 import { Image } from 'astro:assets';
-import type { Person } from '../data/people';
+import { shortCategory, type Person } from '../data/people';
 import ArrowUpRight from './icons/ArrowUpRight.astro';
 import CuratorBadge from './CuratorBadge.astro';
 
@@ -43,7 +43,7 @@ const { person: p, curator = false } = Astro.props;
         {p.name}
       </h2>
       <div class="mt-[22px] flex items-baseline justify-between gap-3">
-        <span class="text-[11px] font-bold tracking-[.14em] text-ardi-blue uppercase">{p.category}</span>
+        <span class="text-[11px] font-bold tracking-[.14em] text-ardi-blue uppercase">{shortCategory(p.category)}</span>
         <span class="text-right text-[15px]">{p.city}</span>
       </div>
       <div class="mt-5 mb-4 h-px bg-ardi-stone"></div>
