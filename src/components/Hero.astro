@@ -21,7 +21,7 @@ const subhead = 'max-w-[560px] font-subhead text-[clamp(19px,1.7vw,26px)] leadin
           <a
             href={`#${j.id}`}
             data-jump={j.id}
-            class="inline-flex items-center gap-0 border border-ardi-stone px-1.5 py-1.5 text-[11px] font-bold tracking-[.1em] whitespace-nowrap text-ardi-blue uppercase md:gap-[7px] md:border-0 md:p-0 md:text-[12px] md:tracking-[.14em]"
+            class="inline-flex items-center gap-0 border border-ardi-stone px-1.5 py-1.5 text-[11px] font-bold tracking-[.1em] whitespace-nowrap text-ardi-blue uppercase md:gap-[7px] md:border-0 md:p-0 md:text-[12px] md:tracking-[.14em] aria-disabled:pointer-events-none aria-disabled:text-ardi-muted"
           >
             {j.label}
           </a>

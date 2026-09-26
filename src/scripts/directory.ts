@@ -115,6 +115,14 @@ const render = () => {
   $$('[data-cat]').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.cat === cat)));
   $$('[data-city]').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.city === city)));
   $$('[data-view-btn]').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.viewBtn === view)));
+  // A jump link whose section is filtered away is greyed out and skipped by the keyboard.
+  $$('[data-jump]').forEach((a) => {
+    const target = document.getElementById(a.dataset.jump!);
+    const off = !target || target.closest('[hidden]') !== null;
+    a.setAttribute('aria-disabled', String(off));
+    if (off) a.tabIndex = -1;
+    else a.removeAttribute('tabindex');
+  });
 
   const key = view + '|' + shown.map((el) => el.dataset.name).join(',');
   if (key !== lastKey) {
@@ -184,18 +192,34 @@ $$('[data-reset]').forEach((b) => b.addEventListener('click', () => setState({ q
 $('[data-menu-reset]').addEventListener('click', () => setState({ cat: 'all', city: 'all' }));
 
 let keyOnMenuOpen = '';
-$$('[data-menu-open]').forEach((b) =>
-  b.addEventListener('click', () => {
-    keyOnMenuOpen = filterKey();
-    setMenu(true);
-  }),
-);
-$$('[data-menu-close]').forEach((b) =>
-  b.addEventListener('click', () => {
-    setMenu(false);
-    if (filterKey() !== keyOnMenuOpen) revealResults();
-  }),
-);
+const openMenu = () => {
+  keyOnMenuOpen = filterKey();
+  setMenu(true);
+  $('[data-menu] [data-menu-close]').focus();
+};
+const closeMenu = () => {
+  setMenu(false);
+  $('[data-menu-open]').focus({ preventScroll: true });
+  if (filterKey() !== keyOnMenuOpen) revealResults();
+};
+$$('[data-menu-open]').forEach((b) => b.addEventListener('click', openMenu));
+$$('[data-menu-close]').forEach((b) => b.addEventListener('click', closeMenu));
+
+// Escape closes the menu; Tab cycles inside it while it is open.
+menu.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') return closeMenu();
+  if (e.key !== 'Tab') return;
+  const focusable = $$('button, a[href], input', menu).filter((el) => el.getClientRects().length > 0);
+  const first = focusable[0];
+  const last = focusable[focusable.length - 1];
+  if (e.shiftKey && document.activeElement === first) {
+    e.preventDefault();
+    last.focus();
+  } else if (!e.shiftKey && document.activeElement === last) {
+    e.preventDefault();
+    first.focus();
+  }
+});
 
 /* ── Mobile search ──────────────────────────────────────────────── */
 
@@ -221,6 +245,11 @@ searchOpen.addEventListener('click', () => setSearchOpen(true));
 $('[data-search-close]').addEventListener('click', () => setSearchOpen(false));
 searchInput.addEventListener('keydown', (e) => {
   if (e.key === 'Enter' || e.key === 'Escape') setSearchOpen(false);
+});
+// Tapping anywhere outside the open search bar closes it.
+document.addEventListener('pointerdown', (e) => {
+  const t = e.target as Node;
+  if (searchBar.hasAttribute('data-open') && !searchBar.contains(t) && !searchOpen.contains(t)) setSearchOpen(false);
 });
 
 /* ── City dropdown ─────────────────────────────────────────────── */
