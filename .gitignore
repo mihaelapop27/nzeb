@@ -149,3 +149,6 @@ docs
 
 # Playwright MCP scratch output
 .playwright-mcp/
+
+# macOS
+.DS_Store
