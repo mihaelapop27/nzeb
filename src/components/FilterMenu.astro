@@ -45,7 +45,7 @@ const chip = 'border border-ardi-stone bg-transparent px-2 py-[11px] text-center
       <div class="grid grid-cols-3 gap-2">
         {
           ['all', ...CITIES].map((city) => (
-            <button type="button" data-city={city} aria-pressed={city === 'all' ? 'true' : 'false'} class:list={[chip, 'text-[13px]']}>
+            <button type="button" data-city-filter={city} aria-pressed={city === 'all' ? 'true' : 'false'} class:list={[chip, 'text-[13px]']}>
               {city === 'all' ? 'Toate orașele' : city}
             </button>
           ))
