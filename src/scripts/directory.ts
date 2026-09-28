@@ -113,7 +113,7 @@ const render = () => {
   $$('[data-city-option]').forEach((o) => o.setAttribute('aria-selected', String(o.dataset.cityOption === city)));
   setText('[data-city-current]', city === 'all' ? 'Toate orașele' : city);
   $$('[data-cat]').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.cat === cat)));
-  $$('[data-city]').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.city === city)));
+  $$('[data-city-filter]').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.cityFilter === city)));
   $$('[data-view-btn]').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.viewBtn === view)));
   // A jump link whose section is filtered away is greyed out and skipped by the keyboard.
   $$('[data-jump]').forEach((a) => {
@@ -224,7 +224,8 @@ $$('[data-cat]').forEach((b) =>
     if (!menu.contains(b)) revealResults();
   }),
 );
-$$('[data-city]').forEach((b) => b.addEventListener('click', () => setState({ city: b.dataset.city! })));
+// City filter buttons have their own attribute: cards and rows carry data-city too, and must not act as filters.
+$$('[data-city-filter]').forEach((b) => b.addEventListener('click', () => setState({ city: b.dataset.cityFilter! })));
 $$('[data-view-btn]').forEach((b) => b.addEventListener('click', () => setView(b.dataset.viewBtn as View)));
 $$('[data-reset]').forEach((b) => b.addEventListener('click', () => setState({ q: '', cat: 'all', city: 'all' })));
 $('[data-menu-reset]').addEventListener('click', () => setState({ cat: 'all', city: 'all' }));
