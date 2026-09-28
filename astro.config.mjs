@@ -1,6 +1,7 @@
 // @ts-check
 import { defineConfig, fontProviders } from 'astro/config';
 import tailwindcss from '@tailwindcss/vite';
+import sitemap from '@astrojs/sitemap';
 
 // Self-hosted at build time. latin-ext is required for Romanian diacritics (ș ț ă â î).
 /** @type {[string, ...string[]]} */
@@ -10,6 +11,9 @@ const subsets = ['latin', 'latin-ext'];
 const fallbacks = ['Helvetica Neue', 'Helvetica', 'sans-serif'];
 
 export default defineConfig({
+  // Public address, used for the absolute links in the sitemap. Change it when the site moves to its own domain.
+  site: 'https://nzeb.vercel.app',
+
   fonts: [
     {
       provider: fontProviders.google(),
@@ -42,7 +46,10 @@ export default defineConfig({
       optimizedFallbacks: false,
     },
   ],
+
   vite: {
     plugins: [tailwindcss()],
   },
+
+  integrations: [sitemap()],
 });
