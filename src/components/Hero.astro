@@ -1,18 +1,21 @@
 ---
-import { CURATORS, JUMP_LINKS, PEOPLE } from '../data/people';
+import { CURATORS, HOME, JUMP_LINKS, PEOPLE } from '../data/people';
 import { profilesLabel } from '../data/labels';
 import PersonCard from './PersonCard.astro';
 import PersonRow from './PersonRow.astro';
+
+// The "&" in the title is set in italic, as in the ARDI wordmark.
+const titleParts = HOME.title.split('&');
 
 const subhead = 'max-w-[560px] font-subhead text-[clamp(19px,1.7vw,26px)] leading-subhead font-semibold tracking-subhead text-pretty text-ardi-black';
 ---
 
 <section class="mx-auto max-w-[1800px] px-4 pt-[72px] pb-11 md:px-10">
-  <div data-hero-reveal class="text-[11px] tracking-[.14em] text-ardi-slate uppercase">Conferință de Design</div>
+  <div data-hero-reveal class="text-[11px] tracking-[.14em] text-ardi-slate uppercase">{HOME.eyebrow}</div>
   <h1 data-hero-reveal style="--i: 1" class="mt-[18px] mb-[22px] font-title text-[clamp(46px,6.4vw,104px)] leading-none font-black tracking-title text-balance uppercase md:leading-title">
-    Arhitecți <em>&amp;</em> Designeri
+    {titleParts.map((part, i) => (i === 0 ? part : <><em>&amp;</em>{part}</>))}
   </h1>
-  <p data-hero-reveal style="--i: 2" class:list={[subhead, 'm-0']}>Oamenii care dau formă spațiilor în care ne adunăm.</p>
+  <p data-hero-reveal style="--i: 2" class:list={[subhead, 'm-0']}>{HOME.subtitle}</p>
 
   <div data-results-top class="relative mt-12">
     <div class="flex flex-wrap justify-between gap-1.5 md:justify-end md:gap-x-7 md:gap-y-2.5">
@@ -41,13 +44,13 @@ const subhead = 'max-w-[560px] font-subhead text-[clamp(19px,1.7vw,26px)] leadin
   </div>
 
   <div class="mt-3.5 md:mt-1.5">
-    <div id="curatori" data-curators>
+    <div id="curatori" data-curators hidden={CURATORS.length === 0}>
       <div class="border-t border-ardi-stone pt-3.5">
         <div class="flex items-baseline justify-between gap-4 whitespace-nowrap">
           <span class="text-[11px] font-bold tracking-[.14em] text-ardi-blue uppercase">Curatori</span>
           <span data-curators-count class="text-[11px] tracking-[.12em] text-ardi-slate uppercase">{profilesLabel(CURATORS.length)}</span>
         </div>
-        <p class:list={[subhead, 'mt-[18px] mb-0']}>Oamenii care întrețin și verifică informațiile publicate pe acest site.</p>
+        <p class:list={[subhead, 'mt-[18px] mb-0']}>{HOME.curatorsIntro}</p>
       </div>
       <div data-curators-view="cards" class="mt-11 grid grid-cols-1 gap-10 md:grid-cols-3 md:gap-x-7 md:gap-y-14 xl:grid-cols-4 2xl:grid-cols-5">
         {CURATORS.map((p) => <PersonCard person={p} curator />)}

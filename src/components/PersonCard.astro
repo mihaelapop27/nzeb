@@ -1,6 +1,6 @@
 ---
-import { Image } from 'astro:assets';
 import { shortCategory, type Person } from '../data/people';
+import { squareImage } from '../lib/sanity';
 import ArrowUpRight from './icons/ArrowUpRight.astro';
 import CuratorBadge from './CuratorBadge.astro';
 
@@ -10,6 +10,8 @@ interface Props {
 }
 
 const { person: p, curator = false } = Astro.props;
+const photo = p.photo?.asset ? squareImage(p.photo, [320, 480, 640, 960, 1280]) : null;
+const hasContact = p.website || p.mailto || p.tel;
 ---
 
 <article
@@ -23,13 +25,21 @@ const { person: p, curator = false } = Astro.props;
 >
   <div class="border border-ardi-stone bg-ardi-paper">
     <div class="relative aspect-square overflow-hidden bg-ardi-grey">
-      <Image
-        src={p.img}
-        alt={p.name}
-        widths={[320, 480, 640]}
-        sizes="(min-width: 1600px) 20vw, (min-width: 1200px) 25vw, (min-width: 760px) 33vw, 100vw"
-        class="block size-full object-cover"
-      />
+      {
+        photo && (
+          <img
+            src={photo.src}
+            srcset={photo.srcset}
+            sizes="(min-width: 1600px) 20vw, (min-width: 1200px) 25vw, (min-width: 760px) 33vw, 100vw"
+            alt={p.name}
+            width="640"
+            height="640"
+            loading="lazy"
+            decoding="async"
+            class="block size-full object-cover"
+          />
+        )
+      }
       {
         curator && (
           <span class="absolute top-0 right-0">
@@ -46,12 +56,19 @@ const { person: p, curator = false } = Astro.props;
         <span class="text-[11px] font-bold tracking-[.14em] text-ardi-blue uppercase">{shortCategory(p.category)}</span>
         <span class="text-right text-[15px]">{p.city}</span>
       </div>
-      <div class="mt-5 mb-4 h-px bg-ardi-stone"></div>
-      <div class="grid grid-cols-[auto_auto_minmax(0,1fr)] items-center gap-x-3 gap-y-2.5 text-[12.5px] @max-[250px]:grid-cols-[auto_auto] @max-[250px]:justify-start">
-        <a href={p.website} target="_blank" rel="noopener" class="inline-flex items-center gap-[5px] whitespace-nowrap">Site <ArrowUpRight /></a>
-        <a href={p.mailto} class="inline-flex items-center gap-[5px] whitespace-nowrap">Email <ArrowUpRight /></a>
-        <a href={p.tel} class="min-w-0 text-right whitespace-nowrap tabular-nums @max-[250px]:col-span-full @max-[250px]:text-left">{p.phone}</a>
-      </div>
+      {
+        hasContact && (
+          <>
+            <div class="mt-5 mb-4 h-px bg-ardi-stone" />
+            <div class="grid grid-cols-[auto_auto_minmax(0,1fr)] items-center gap-x-3 gap-y-2.5 text-[12.5px] @max-[250px]:grid-cols-[auto_auto] @max-[250px]:justify-start">
+              {p.website && <a href={p.website} target="_blank" rel="noopener" class="inline-flex items-center gap-[5px] whitespace-nowrap">Site <ArrowUpRight /></a>}
+              {p.mailto && <a href={p.mailto} class="inline-flex items-center gap-[5px] whitespace-nowrap">Email <ArrowUpRight /></a>}
+              {/* Stays in the right-hand column even when the site or email is missing. */}
+              {p.tel && <a href={p.tel} class="col-start-3 min-w-0 text-right whitespace-nowrap tabular-nums @max-[250px]:col-span-full @max-[250px]:text-left">{p.phone}</a>}
+            </div>
+          </>
+        )
+      }
     </div>
   </div>
 </article>
