@@ -6,13 +6,15 @@ import Footer from '../components/Footer.astro';
 import Header from '../components/Header.astro';
 import Hero from '../components/Hero.astro';
 import Partners from '../components/Partners.astro';
+import { HOME, PARTNERS } from '../data/people';
 ---
 
-<Layout title="Arhitecți & Designeri — ARDI" description="Oamenii care dau formă spațiilor în care ne adunăm.">
+<Layout title={`${HOME.title} — ARDI`} description={HOME.subtitle}>
   <Header />
   <Hero />
   <Directory />
-  <Partners />
+  {/* Left out until a partner is published, along with its jump link (JUMP_LINKS). */}
+  {PARTNERS.length > 0 && <Partners />}
   <Footer />
   <FilterMenu />
 </Layout>

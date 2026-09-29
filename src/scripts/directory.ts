@@ -365,10 +365,13 @@ $$('[data-jump]').forEach((a) =>
   }),
 );
 
-$('[data-back-to-top]').addEventListener('click', (e) => {
-  e.preventDefault();
-  window.scrollTo({ top: 0, behavior: 'smooth' });
-});
+// Lives in the Partners section, which is left out while there are no partners.
+$$('[data-back-to-top]').forEach((a) =>
+  a.addEventListener('click', (e) => {
+    e.preventDefault();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }),
+);
 
 // Start from the filters in the address (shared or bookmarked links), then tidy the address.
 Object.assign(state, readUrl());

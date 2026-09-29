@@ -1,6 +1,21 @@
 ---
 import { PARTNERS } from '../data/people';
 import { partnersLabel } from '../data/labels';
+import { urlFor } from '../lib/sanity';
+
+// Each logo is fitted inside a common box, so wide and square logos read at a similar size.
+// A partner with a link opens it in a new tab.
+const tiles = PARTNERS.map((p) => {
+  const width = p.main ? 960 : 480;
+  const logo = urlFor(p.logo).width(width).fit('max');
+  return {
+    ...p,
+    Tag: p.website ? 'a' : 'div',
+    link: p.website ? { href: p.website, target: '_blank', rel: 'noopener' } : {},
+    src: logo.url(),
+    srcset: `${logo.url()} 1x, ${logo.width(width * 2).url()} 2x`,
+  };
+});
 ---
 
 <section id="parteneri" class="bg-ardi-grey">
@@ -11,15 +26,16 @@ import { partnersLabel } from '../data/labels';
     </div>
     <div class="mt-8 grid grid-cols-2 gap-4 pr-1 pb-1 md:grid-cols-3 xl:grid-cols-4">
       {
-        PARTNERS.map((p) => (
-          <div
-            data-reveal
+        tiles.map(({ Tag, ...p }) => (
+          <Tag
+            {...p.link}
+            data-reveal=""
             class:list={[
               'relative box-content grid translate-y-4 place-items-center border border-transparent bg-ardi-paper opacity-0 shadow-[4px_4px_0_0_var(--color-ardi-stone)] transition-[opacity,translate] duration-600 ease-reveal data-revealed:translate-y-0 data-revealed:opacity-100',
               p.main ? 'col-span-2 aspect-5/2 md:row-span-2 md:aspect-auto' : 'aspect-5/2',
             ]}
           >
-            <span class:list={['px-5 text-center font-[ui-monospace,Menlo,monospace] tracking-[.08em] text-ardi-muted uppercase', p.main ? 'text-[14px]' : 'text-[12px]']}>{p.label}</span>
+            <img src={p.src} srcset={p.srcset} alt={p.name} loading="lazy" decoding="async" class="block h-[60%] w-[72%] object-contain" />
             {
               p.main && (
                 <span class="absolute top-0 right-0 bg-ardi-blue px-3 py-[7px] text-[10.5px] leading-none font-bold tracking-[.14em] text-ardi-paper uppercase">
@@ -27,7 +43,7 @@ import { partnersLabel } from '../data/labels';
                 </span>
               )
             }
-          </div>
+          </Tag>
         ))
       }
     </div>

@@ -1,6 +1,6 @@
 ---
-import { Image } from 'astro:assets';
 import { shortCategory, type Person } from '../data/people';
+import { squareImage } from '../lib/sanity';
 import ArrowUpRight from './icons/ArrowUpRight.astro';
 import CuratorBadge from './CuratorBadge.astro';
 
@@ -10,6 +10,7 @@ interface Props {
 }
 
 const { person: p, curator = false } = Astro.props;
+const photo = p.photo?.asset ? squareImage(p.photo, [56, 112, 168]) : null;
 ---
 
 <div
@@ -22,7 +23,7 @@ const { person: p, curator = false } = Astro.props;
   class="grid translate-y-2.5 grid-cols-[56px_minmax(0,1fr)] items-start gap-x-4 gap-y-2 border-b border-ardi-stone py-3 opacity-0 transition-[opacity,translate] duration-600 ease-reveal data-revealed:translate-y-0 data-revealed:opacity-100 md:grid-cols-[56px_minmax(0,320px)_100px_minmax(150px,1fr)_130px_228px] md:items-center md:gap-5"
 >
   <div class="relative row-[1/span_3] box-content size-14 overflow-hidden border border-ardi-stone bg-ardi-grey md:row-auto">
-    <Image src={p.img} alt="" width={112} class="block size-full object-cover" />
+    {photo && <img src={photo.src} srcset={photo.srcset} sizes="56px" alt="" width="56" height="56" loading="lazy" decoding="async" class="block size-full object-cover" />}
   </div>
   <div class:list={['flex min-w-0 flex-wrap gap-3', curator ? 'items-center' : 'items-baseline']}>
     <span class="font-title text-[24px] leading-title font-black tracking-title uppercase">{p.name}</span>
@@ -41,8 +42,8 @@ const { person: p, curator = false } = Astro.props;
     <div class="text-[14px]">{p.city}</div>
   </div>
   <div class="flex gap-[18px] text-[13px] whitespace-nowrap">
-    <a href={p.website} target="_blank" rel="noopener" class="inline-flex items-center gap-[5px]">Site <ArrowUpRight size={10} /></a>
-    <a href={p.mailto} class="inline-flex items-center gap-[5px]">Email <ArrowUpRight size={10} /></a>
-    <a href={p.tel} class="tabular-nums">{p.phone}</a>
+    {p.website && <a href={p.website} target="_blank" rel="noopener" class="inline-flex items-center gap-[5px]">Site <ArrowUpRight size={10} /></a>}
+    {p.mailto && <a href={p.mailto} class="inline-flex items-center gap-[5px]">Email <ArrowUpRight size={10} /></a>}
+    {p.tel && <a href={p.tel} class="tabular-nums">{p.phone}</a>}
   </div>
 </div>
