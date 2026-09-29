@@ -10,6 +10,7 @@
     "dev": "sanity dev",
     "start": "sanity start",
     "seed": "sanity exec seed/import.ts --with-user-token",
+    "import-tally": "sanity exec scripts/import-tally.ts --with-user-token --",
     "typegen": "sanity schemas extract --force && sanity typegen generate"
   },
   "prettier": {
