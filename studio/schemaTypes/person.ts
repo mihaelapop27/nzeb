@@ -79,6 +79,14 @@ export const person = defineType({
       type: 'url',
       validation: (rule) => rule.uri({scheme: ['http', 'https']}),
     }),
+    // Set by scripts/import-tally.ts, so re-importing a newer export only adds new submissions.
+    defineField({
+      name: 'submissionId',
+      title: 'ID înscriere Tally',
+      type: 'string',
+      readOnly: true,
+      hidden: true,
+    }),
   ],
   orderings: [{title: 'Nume', name: 'name', by: [{field: 'name', direction: 'asc'}]}],
   preview: {
