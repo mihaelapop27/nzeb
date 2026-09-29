@@ -1,5 +1,6 @@
 import {defineField, defineType} from 'sanity'
 import {CaseIcon} from '@sanity/icons/Case'
+import {formatWebsite} from '../lib/website'
 
 // Festival-wide partners, shown in the Partners section: the main partner first, then by name.
 export const partner = defineType({
@@ -12,7 +13,8 @@ export const partner = defineType({
       name: 'name',
       title: 'Nume',
       type: 'string',
-      description: 'Nu apare pe site; e textul alternativ al logo-ului, citit de cititoarele de ecran.',
+      description:
+        'Nu apare pe site; e textul alternativ al logo-ului, citit de cititoarele de ecran.',
       validation: (rule) => rule.required(),
     }),
     defineField({
@@ -25,9 +27,13 @@ export const partner = defineType({
     defineField({
       name: 'website',
       title: 'Link',
-      type: 'url',
-      description: 'Se deschide într-un tab nou la click pe logo.',
-      validation: (rule) => rule.uri({scheme: ['http', 'https']}),
+      // A string, not 'url', so "www.firma.ro" is accepted as typed; the site adds https://.
+      type: 'string',
+      description: 'Opțional. Se deschide într-un tab nou la click pe logo, ex. www.firma.ro.',
+      validation: (rule) =>
+        rule.custom((value) =>
+          !value || formatWebsite(value) ? true : 'Adresă invalidă — ex. www.firma.ro',
+        ),
     }),
     defineField({
       name: 'main',

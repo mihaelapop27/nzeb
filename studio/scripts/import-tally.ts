@@ -15,6 +15,7 @@ import {randomUUID} from 'node:crypto'
 import {readFileSync} from 'node:fs'
 import path from 'node:path'
 import {getCliClient} from 'sanity/cli'
+import {formatWebsite} from '../lib/website'
 import {CATEGORIES} from '../schemaTypes/person'
 
 const args = process.argv.slice(2)
@@ -91,18 +92,6 @@ function formatPhone(raw: string): string | undefined {
     return `+40 ${digits.slice(2, 5)} ${digits.slice(5, 8)} ${digits.slice(8)}`
   }
   return (raw.trim().startsWith('+') || digits.length > 10 ? '+' : '') + digits
-}
-
-/** "vasile.ro" → "https://vasile.ro"; undefined when it isn't a usable address. */
-function formatWebsite(raw: string): string | undefined {
-  const value = raw.trim()
-  if (!value) return undefined
-  try {
-    const url = new URL(/^https?:\/\//i.test(value) ? value : `https://${value}`)
-    return url.hostname.includes('.') ? url.href.replace(/\/$/, '') : undefined
-  } catch {
-    return undefined
-  }
 }
 
 /** Matches "arhitect", "Architect", "designer de interior", "Designer"… to a schema value. */

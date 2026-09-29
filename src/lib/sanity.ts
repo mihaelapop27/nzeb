@@ -58,11 +58,15 @@ export async function getPeople() {
     .sort(byName);
 }
 
-/** The main partner first, then the rest by name. */
+/** The main partner first, then the rest by name. The link may be typed as "www.firma.ro", so it gets a scheme here. */
 export async function getPartners() {
   const partners = await sanityClient.fetch(PARTNERS_QUERY);
   return partners
-    .map((p) => required(p, ['name', 'logo'], `partner ${p._id}`))
+    .map((doc) => {
+      const p = required(doc, ['name', 'logo'], `partner ${doc._id}`);
+      const website = p.website?.trim();
+      return { ...p, website: website ? (/^https?:\/\//i.test(website) ? website : `https://${website}`) : null };
+    })
     .sort((a, b) => Number(b.main) - Number(a.main) || byName(a, b));
 }
 

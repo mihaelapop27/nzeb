@@ -84,6 +84,7 @@ export type Person = {
   phone?: string;
   email?: string;
   website?: string;
+  submissionId?: string;
 };
 
 export type City = {
