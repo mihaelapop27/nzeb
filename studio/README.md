@@ -69,6 +69,19 @@ Formular Tally → Google Sheet → CSV → `npm run import-tally` → Sanity �
    Curator, potrivești decupajul fotografiei și faci corecturi.
 7. **Site**: se reconstruiește singur la fiecare Publish, în 1–2 minute.
 
+## Export PDF
+
+Lista profilurilor publicate, pe A4: fotografie, nume, rol, oraș, telefon, email și site (linkuri
+care se pot da click). Curatorii au eticheta Curator. Din `studio/` (o dată: `npm install` și
+`npx sanity login`):
+
+```sh
+npm run export-pdf                            # → studio/profiluri.pdf
+npm run export-pdf -- ~/Desktop/lista.pdf     # alt fișier
+```
+
+Tipărește cu Google Chrome instalat pe calculator. Nu face parte din build-ul site-ului.
+
 ## Development
 
 - `npm run dev` starts the Studio at <http://localhost:3333>.
