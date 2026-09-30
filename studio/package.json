@@ -11,6 +11,7 @@
     "start": "sanity start",
     "seed": "sanity exec seed/import.ts --with-user-token",
     "import-tally": "sanity exec scripts/import-tally.ts --with-user-token --",
+    "export-pdf": "sanity exec scripts/export-pdf.ts --with-user-token --",
     "typegen": "sanity schemas extract --force && sanity typegen generate"
   },
   "prettier": {
@@ -29,8 +30,10 @@
   },
   "devDependencies": {
     "@sanity/eslint-config-studio": "^7.0.0",
+    "@sanity/image-url": "^2.1.1",
     "@types/react": "^19.3.0",
     "eslint": "^10.11.0",
+    "playwright-core": "^1.63.0",
     "prettier": "^3.9.9",
     "typescript": "^5.9.3"
   }
