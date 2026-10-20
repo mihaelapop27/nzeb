@@ -170,7 +170,9 @@ const lastGroup = others.length % perPage || perPage
 const lastRows = Math.ceil(lastGroup / cols)
 const lastHeight =
   (curators.length || otherPages.length > 1 ? 0 : 37) + 13 + lastRows * ROW + (lastRows - 1) * GAP
-const partnersFit = otherPages.length > 0 && lastHeight + partnersHeight <= 267
+// Sharing the page, the partners sit 14 mm further down (see .grid + .section), apart from the
+// people above.
+const partnersFit = otherPages.length > 0 && lastHeight + 14 + partnersHeight <= 267
 if (partnersSection && partnersFit) otherPages[otherPages.length - 1] += partnersSection
 
 const pages = [
@@ -229,7 +231,9 @@ const html = `<!doctype html>
   .small .card-role span:first-child { min-height: 2.6em; }
   .small .card-contact { margin-top: 1.5mm; font-size: 7.5pt; }
   .partners { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 4mm; margin-top: 14mm; }
-  /* Under the last profiles rather than alone on a page, no extra room above the logos. */
+  /* Under the last profiles rather than alone on a page: the room goes above the heading, so
+     the partners stand apart from the people, not between the heading and the logos. */
+  .grid + .section { margin-top: 20mm; }
   .grid ~ .partners { margin-top: 0; }
   .partner { position: relative; display: grid; place-items: center; aspect-ratio: 5 / 2; border: 0.5pt solid #cecac8; break-inside: avoid; }
   .partner.main { grid-column: span 2; }
