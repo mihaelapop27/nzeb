@@ -114,7 +114,8 @@ const card = (p: Person, small: boolean) => {
 
 // Curators all go on page 1, under the title, and aren't repeated among the others, so nobody
 // is printed twice; past four, their cards shrink to keep them on that page. Everyone else
-// follows, six per page (four with --four); the partners get the last page to themselves.
+// follows, six per page (four with --four); the partners go under the last of them if they fit
+// there, else on a page of their own.
 const curators = people.filter((p) => p.curator)
 const others = people.filter((p) => !p.curator)
 const chunk = <T,>(list: T[], size: number) =>
@@ -155,15 +156,31 @@ const partnerTile = (p: Partner) => {
 const partnersSection = partners.length
   ? `${section('Parteneri')}<div class="partners">${partners.map(partnerTile).join('')}</div>`
   : ''
+// Tiles are 5:2, three to a row ((182 − 2 × 4) / 3 = 58 mm wide, so 23.2 mm tall); the main
+// partner takes two places.
+const partnerRows = Math.ceil((partners.length + partners.filter((p) => p.main).length) / 3)
+const partnersHeight = 13 + partnerRows * 23.2 + (partnerRows - 1) * 4
 
-const otherPages = chunk(others, perPage)
+const cols = perPage / 2
+const otherPages = chunk(others, perPage).map(
+  (group, i) =>
+    `${curators.length || i ? '' : header}${section('Arhitecți & Designeri')}${grid(group, {cols, height: ROW})}`,
+)
+const lastGroup = others.length % perPage || perPage
+const lastRows = Math.ceil(lastGroup / cols)
+const lastHeight =
+  (curators.length || otherPages.length > 1 ? 0 : 37) + 13 + lastRows * ROW + (lastRows - 1) * GAP
+// Sharing the page, the partners sit at its foot (see .fill), at least 14 mm below the people.
+const partnersFit = otherPages.length > 0 && lastHeight + 14 + partnersHeight <= 267
+if (partnersSection && partnersFit) {
+  const last = otherPages.length - 1
+  otherPages[last] = `<div class="fill">${otherPages[last]}<div class="foot">${partnersSection}</div></div>`
+}
+
 const pages = [
   ...(curators.length ? [`${header}${section('Curatori')}${grid(curators, curatorGrid())}`] : []),
-  ...otherPages.map(
-    (group, i) =>
-      `${curators.length || i ? '' : header}${section('Arhitecți & Designeri')}${grid(group, {cols: perPage / 2, height: ROW})}`,
-  ),
-  ...(partnersSection ? [partnersSection] : []),
+  ...otherPages,
+  ...(partnersSection && !partnersFit ? [partnersSection] : []),
 ]
 const cardsBody = pages.map((page) => `<section class="page">${page}</section>`).join('\n')
 
@@ -216,6 +233,12 @@ const html = `<!doctype html>
   .small .card-role span:first-child { min-height: 2.6em; }
   .small .card-contact { margin-top: 1.5mm; font-size: 7.5pt; }
   .partners { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 4mm; margin-top: 14mm; }
+  /* Partners under the last profiles: pushed to the foot of the page (a hair under the 267 mm
+     printable height, so rounding can't spill a blank page), without the extra room above the
+     logos that a page of their own gets. */
+  .fill { display: flex; flex-direction: column; height: 265mm; }
+  .foot { margin-top: auto; }
+  .foot .partners { margin-top: 0; }
   .partner { position: relative; display: grid; place-items: center; aspect-ratio: 5 / 2; border: 0.5pt solid #cecac8; break-inside: avoid; }
   .partner.main { grid-column: span 2; }
   .partner img { position: absolute; inset: 0; margin: auto; width: 72%; height: 60%; object-fit: contain; }
@@ -243,7 +266,7 @@ try {
     footerTemplate: `<div style="width: 100%; padding: 0 14mm; display: flex; justify-content: space-between;
       font: 7pt Helvetica, sans-serif; color: #8a8582;">
       <span>${esc(heading)} · ${year}</span>
-      <span class="pageNumber"></span>
+      <span>vicusbass.com<span style="margin-left: 4mm;" class="pageNumber"></span></span>
     </div>`,
   })
 } finally {
