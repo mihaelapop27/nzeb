@@ -46,6 +46,7 @@ const bareUrl = (url: string) => url.replace(/^https?:\/\/(www\.)?/i, '').replac
 
 const logo = readFileSync(new URL('../../src/assets/logo/ardi-logo-lockup.png', import.meta.url))
 const date = new Date().toLocaleDateString('ro-RO', {day: 'numeric', month: 'long', year: 'numeric'})
+const year = new Date().getFullYear()
 const heading = title ?? 'Arhitecți & Designeri'
 
 // In the schema's order (Arhitect first), whatever order they were ticked in the Studio.
@@ -131,7 +132,7 @@ try {
     // Header/footer templates can't use web fonts, hence Helvetica.
     footerTemplate: `<div style="width: 100%; padding: 0 14mm; display: flex; justify-content: space-between;
       font: 7pt Helvetica, sans-serif; color: #8a8582;">
-      <span>${esc(heading)} · ${date}</span>
+      <span>${esc(heading)} · ${year}</span>
       <span><span class="pageNumber"></span> / <span class="totalPages"></span></span>
     </div>`,
   })
