@@ -28,12 +28,14 @@ export const person = defineType({
       description: 'Numele biroului. Nu apare pe card, dar căutarea îl găsește.',
     }),
     defineField({
-      name: 'category',
-      title: 'Categorie',
-      type: 'string',
-      description: 'Pe card apare forma scurtă: „Arhitect” sau „Designer”.',
-      options: {list: CATEGORIES, layout: 'radio', direction: 'horizontal'},
-      validation: (rule) => rule.required(),
+      name: 'categories',
+      title: 'Categorii',
+      type: 'array',
+      of: [{type: 'string'}],
+      description:
+        'Bifează ambele dacă face și arhitectură, și design interior: apare la ambele filtre. Pe card apare forma scurtă: „Arhitect”, „Designer”.',
+      options: {list: CATEGORIES, layout: 'grid'},
+      validation: (rule) => rule.required().min(1).unique(),
     }),
     defineField({
       name: 'curator',
@@ -92,14 +94,14 @@ export const person = defineType({
   preview: {
     select: {
       title: 'name',
-      category: 'category',
+      categories: 'categories',
       city: 'city.name',
       curator: 'curator',
       media: 'photo',
     },
-    prepare: ({title, category, city, curator, media}) => ({
+    prepare: ({title, categories, city, curator, media}) => ({
       title,
-      subtitle: [category, city, curator && 'Curator'].filter(Boolean).join(' · '),
+      subtitle: [...(categories ?? []), city, curator && 'Curator'].filter(Boolean).join(' · '),
       media,
     }),
   },

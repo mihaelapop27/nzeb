@@ -71,7 +71,7 @@ export type Person = {
   _rev: string;
   name?: string;
   studio?: string;
-  category?: "Arhitect" | "Designer de interior";
+  categories?: Array<string>;
   curator?: boolean;
   city?: CityReference;
   photo?: {
@@ -242,12 +242,12 @@ export type HOME_PAGE_QUERY_RESULT = {
 
 // Source: ../src/lib/sanity.ts
 // Variable: PEOPLE_QUERY
-// Query: *[_type == "person"]{  _id, name, studio, category, "curator": curator == true, "city": city->name, photo, phone, email, website}
+// Query: *[_type == "person"]{  _id, name, studio, "categories": coalesce(categories, [category]), "curator": curator == true, "city": city->name, photo, phone, email, website}
 export type PEOPLE_QUERY_RESULT = Array<{
   _id: string;
   name: string | null;
   studio: string | null;
-  category: "Arhitect" | "Designer de interior" | null;
+  categories: Array<null> | Array<string>;
   curator: boolean | false;
   city: string | null;
   photo: {
@@ -283,7 +283,7 @@ export type PARTNERS_QUERY_RESULT = Array<{
 declare global {
   interface SanityQueries {
     '*[_type == "homePage" && _id == "homePage"][0]{ eyebrow, title, subtitle, curatorsIntro }': HOME_PAGE_QUERY_RESULT;
-    '*[_type == "person"]{\n  _id, name, studio, category, "curator": curator == true, "city": city->name, photo, phone, email, website\n}': PEOPLE_QUERY_RESULT;
+    '*[_type == "person"]{\n  _id, name, studio, "categories": coalesce(categories, [category]), "curator": curator == true, "city": city->name, photo, phone, email, website\n}': PEOPLE_QUERY_RESULT;
     '*[_type == "partner"]{ _id, name, logo, website, "main": main == true }': PARTNERS_QUERY_RESULT;
   }
 }

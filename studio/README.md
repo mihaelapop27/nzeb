@@ -49,9 +49,11 @@ Formular Tally → Google Sheet → CSV → `npm run import-tally` → Sanity �
    | Add site | link, site | butonul „Site” |
    | Add Photo (imagine, max. 10 MB) | photo, foto | fotografia, decupată pătrat |
    | What is the city: București, Brașov, Cluj-Napoca, Constanța, Iași, Oradea, Sibiu, Timișoara | city, oraș | orașul și filtrul de orașe |
-   | Add your role: Arhitect / Designer de interior | role, rol | eticheta de rol și filtrul |
+   | Add your role: Arhitect / Designer de interior / ambele | role, rol, servicii | eticheta de rol și filtrul; „ambele” = la ambele filtre |
 
-   Curatorii se bifează în Studio, nu în formular.
+   Curatorii se bifează în Studio, nu în formular. Merge și exportul unui Google Form (link-urile
+   Google Drive la poze trebuie să fie publice); fără coloana *Submission ID*, importul sare peste
+   numele care există deja.
 2. **Google Sheets**: în Tally, Integrations → Google Sheets → Connect. Nu șterge coloana
    *Submission ID*: după ea, scriptul sare peste înscrierile deja importate.
 3. **Verificare**: șterge din foaie spam-ul și testele. Foaia rămâne privată (telefoane, link-uri la poze).

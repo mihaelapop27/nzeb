@@ -18,8 +18,9 @@ const sanityClient = createClient({
 export const HOME_PAGE_QUERY = defineQuery(`*[_type == "homePage" && _id == "homePage"][0]{ eyebrow, title, subtitle, curatorsIntro }`);
 
 // Sorted on our side: GROQ orders by code point, which would put "Ștefan" after "Z".
+// Profiles saved from a Studio still open on the old schema have a single "category" instead.
 export const PEOPLE_QUERY = defineQuery(`*[_type == "person"]{
-  _id, name, studio, category, "curator": curator == true, "city": city->name, photo, phone, email, website
+  _id, name, studio, "categories": coalesce(categories, [category]), "curator": curator == true, "city": city->name, photo, phone, email, website
 }`);
 
 export const PARTNERS_QUERY = defineQuery(`*[_type == "partner"]{ _id, name, logo, website, "main": main == true }`);
@@ -42,14 +43,21 @@ export async function getHomePage() {
 
 const byName = (a: { name: string }, b: { name: string }) => a.name.localeCompare(b.name, 'ro');
 
+// The values of the "Categorii" checkboxes in the Studio (studio/schemaTypes/person.ts).
+const CATEGORY_ORDER = ['Arhitect', 'Designer de interior'] as const;
+
 /** Every profile, alphabetical, with its mailto:/tel: links ready for the templates. */
 export async function getPeople() {
   const people = await sanityClient.fetch(PEOPLE_QUERY);
   return people
     .map((doc) => {
-      const p = required(doc, ['name', 'category', 'city'], `person ${doc._id}`);
+      const p = required(doc, ['name', 'city'], `person ${doc._id}`);
+      // Always in the schema's order (Arhitect first), whatever order they were ticked in.
+      const categories = CATEGORY_ORDER.filter((c) => (p.categories as (string | null)[]).includes(c));
+      if (categories.length === 0) throw new Error(`Sanity person ${doc._id} is missing required field "categories"`);
       return {
         ...p,
+        categories,
         studio: p.studio ?? '',
         mailto: p.email ? `mailto:${p.email}` : null,
         tel: p.phone ? `tel:${p.phone.replace(/[^+0-9]/g, '')}` : null,
