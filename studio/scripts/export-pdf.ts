@@ -11,7 +11,7 @@ import path from 'node:path'
 import {createImageUrlBuilder, type SanityImageObject, type SanityImageSource} from '@sanity/image-url'
 import {chromium} from 'playwright-core'
 import {getCliClient} from 'sanity/cli'
-import {partnersLabel, profilesLabel} from '../../src/data/labels'
+import {profilesLabel} from '../../src/data/labels'
 import {withDefaultHotspot} from '../../src/lib/photo'
 import {CATEGORIES} from '../schemaTypes/person'
 
@@ -131,13 +131,12 @@ const curatorGrid = () => {
 const header = `<header>
     <div>
       <h1>${esc(heading)}</h1>
-      <div class="meta">${profilesLabel(people.length)} · ${year}</div>
+      <div class="meta">${year}</div>
     </div>
     <img src="data:image/png;base64,${logo.toString('base64')}" alt="ARDI">
   </header>`
 
-const section = (label: string, count: string) =>
-  `<div class="section"><span>${esc(label)}</span><span>${count}</span></div>`
+const section = (label: string) => `<div class="section"><span>${esc(label)}</span></div>`
 
 const grid = (list: Person[], {cols, height} = {cols: 2, height: ROW}) =>
   `<div class="grid${cols > 2 ? ' small' : ''}" style="grid-template-columns: repeat(${cols}, minmax(0, 1fr)); grid-auto-rows: ${height}mm">${list.map(card).join('')}</div>`
@@ -151,15 +150,15 @@ const partnerTile = (p: Partner) => {
   }</${tag}>`
 }
 const partnersSection = partners.length
-  ? `${section('Parteneri', partnersLabel(partners.length))}<div class="partners">${partners.map(partnerTile).join('')}</div>`
+  ? `${section('Parteneri')}<div class="partners">${partners.map(partnerTile).join('')}</div>`
   : ''
 
 const otherPages = chunk(others, 4)
 const pages = [
-  ...(curators.length ? [`${header}${section('Curatori', profilesLabel(curators.length))}${grid(curators, curatorGrid())}`] : []),
+  ...(curators.length ? [`${header}${section('Curatori')}${grid(curators, curatorGrid())}`] : []),
   ...otherPages.map(
     (group, i) =>
-      `${curators.length || i ? '' : header}${section('Arhitecți & Designeri', profilesLabel(others.length))}${grid(group)}`,
+      `${curators.length || i ? '' : header}${section('Arhitecți & Designeri')}${grid(group)}`,
   ),
   ...(partnersSection ? [partnersSection] : []),
 ]
@@ -192,9 +191,8 @@ const html = `<!doctype html>
   .contact div { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   /* Cards (--cards): grid sizes are set per grid, see curatorGrid(). */
   .page + .page { break-before: page; }
-  .section { display: flex; justify-content: space-between; margin: 6mm 0 4mm; padding-top: 2.5mm; border-top: 1pt solid #000;
-    font-size: 7pt; letter-spacing: .14em; text-transform: uppercase; color: #8a8582; }
-  .section span:first-child { color: #3c1dee; font-weight: 700; }
+  .section { margin: 6mm 0 4mm; padding-top: 2.5mm; border-top: 1pt solid #000;
+    color: #3c1dee; font-size: 7pt; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; }
   header + .section { border-top: 0; padding-top: 0; }
   .grid { display: grid; gap: 6mm; }
   .card { display: flex; flex-direction: column; min-height: 0; overflow: hidden; border: 0.5pt solid #cecac8; break-inside: avoid; }
