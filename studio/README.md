@@ -80,7 +80,11 @@ care se pot da click). Curatorii au eticheta Curator. Din `studio/` (o dată: `n
 ```sh
 npm run export-pdf                            # → studio/profiluri.pdf
 npm run export-pdf -- ~/Desktop/lista.pdf     # alt fișier
+npm run export-pdf -- --cards                 # carduri → studio/profiluri-carduri.pdf
 ```
+
+Cu `--cards`: câte 4 carduri pe pagină (fotografie, nume, rol, oraș, contact), curatorii pe
+prima pagină, sub titlu; restul profilurilor urmează de la pagina 2, fără curatori.
 
 Tipărește cu Google Chrome instalat pe calculator. Nu face parte din build-ul site-ului.
 

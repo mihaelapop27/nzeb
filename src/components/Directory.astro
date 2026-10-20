@@ -1,5 +1,5 @@
 ---
-import { PEOPLE } from '../data/people';
+import { DIRECTORY } from '../data/people';
 import PersonCard from './PersonCard.astro';
 import PersonRow from './PersonRow.astro';
 ---
@@ -7,11 +7,11 @@ import PersonRow from './PersonRow.astro';
 <main class="mx-auto max-w-[1800px] px-4 pb-[70px] md:px-10">
   <div data-content class="transition-[opacity,translate] duration-260 ease-in-out">
     <div data-directory-view="cards" class="grid grid-cols-1 gap-10 md:grid-cols-3 md:gap-x-7 md:gap-y-14 xl:grid-cols-4 2xl:grid-cols-5">
-      {PEOPLE.map((p) => <PersonCard person={p} />)}
+      {DIRECTORY.map((p) => <PersonCard person={p} />)}
     </div>
 
     <div data-directory-view="list" hidden class="-mt-4">
-      {PEOPLE.map((p) => <PersonRow person={p} />)}
+      {DIRECTORY.map((p) => <PersonRow person={p} />)}
     </div>
 
     <div data-empty hidden class="py-20 text-center">

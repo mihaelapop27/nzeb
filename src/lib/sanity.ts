@@ -3,6 +3,7 @@
 import { createClient } from '@sanity/client';
 import { defineQuery } from 'groq';
 import { createImageUrlBuilder, type SanityImageSource } from '@sanity/image-url';
+import { withDefaultHotspot } from './photo';
 
 const projectId = import.meta.env.PUBLIC_SANITY_PROJECT_ID;
 if (!projectId) throw new Error('Set PUBLIC_SANITY_PROJECT_ID in .env (see .env.example) or in the Vercel project settings.');
@@ -86,8 +87,9 @@ const builder = createImageUrlBuilder(sanityClient);
 /** Image URL builder; honours the hotspot/crop set in the Studio. */
 export const urlFor = (source: SanityImageSource) => builder.image(source).auto('format');
 
-/** A square crop around the Studio hotspot at each of `widths`, as `src` (the largest) and `srcset`. */
+/** A square crop around the Studio hotspot (or a little above the middle) at each of `widths`, as `src` (the largest) and `srcset`. */
 export function squareImage(source: SanityImageSource, widths: number[]) {
-  const at = (w: number) => urlFor(source).width(w).height(w).fit('crop').url();
+  const anchored = typeof source === 'object' && 'asset' in source ? withDefaultHotspot(source) : source;
+  const at = (w: number) => urlFor(anchored).width(w).height(w).fit('crop').url();
   return { src: at(Math.max(...widths)), srcset: widths.map((w) => `${at(w)} ${w}w`).join(', ') };
 }

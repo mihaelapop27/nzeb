@@ -81,12 +81,7 @@ const render = () => {
   cards.forEach((el) => (el.hidden = !shown.includes(el)));
   $$('[data-directory-view="list"] [data-person]').forEach((el) => (el.hidden = !matches(el)));
 
-  const n = shown.length;
-  $('[data-directory-view="cards"]').hidden = !isCards || n === 0;
-  $('[data-directory-view="list"]').hidden = isCards || n === 0;
-  $('[data-empty]').hidden = n > 0;
-
-  // Curators follow the view toggle and the filters, but are not part of the profile count.
+  // Curators are only in their own section, which follows the view toggle and the filters too.
   const curators = $$('[data-curators-view="cards"] [data-person]');
   const curatorsShown = curators.filter(matches).length;
   $$('[data-curators] [data-person]').forEach((el) => (el.hidden = !matches(el)));
@@ -95,10 +90,17 @@ const render = () => {
   $('[data-curators-view="list"]').hidden = isCards;
   setText('[data-curators-count]', profilesLabel(curatorsShown));
 
+  const n = shown.length;
+  $('[data-directory-view="cards"]').hidden = !isCards || n === 0;
+  $('[data-directory-view="list"]').hidden = isCards || n === 0;
+  // "Nothing matches" only when neither section has a match; an empty directory under matching curators just drops its heading.
+  $('#arhitecti').hidden = n === 0 && curatorsShown > 0;
+  $('[data-empty]').hidden = n + curatorsShown > 0;
+
   // Labels
   const nFilters = (cat !== 'all' ? 1 : 0) + (city !== 'all' ? 1 : 0);
   setText('[data-count]', profilesLabel(n));
-  setText('[data-show-label]', n === 0 ? 'Niciun profil găsit' : showProfilesLabel(n));
+  setText('[data-show-label]', n + curatorsShown === 0 ? 'Niciun profil găsit' : showProfilesLabel(n + curatorsShown));
   setText('[data-filters-label]', 'Filtre' + (nFilters ? ` (${nFilters})` : ''));
   setText('[data-reset-label]', nFilters + (q !== '' ? 1 : 0) === 1 ? 'Resetează filtrul' : 'Resetează filtrele');
   $('[data-reset-row]').hidden = q === '' && cat === 'all' && city === 'all';
