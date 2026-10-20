@@ -266,7 +266,7 @@ try {
     footerTemplate: `<div style="width: 100%; padding: 0 14mm; display: flex; justify-content: space-between;
       font: 7pt Helvetica, sans-serif; color: #8a8582;">
       <span>${esc(heading)} · ${year}</span>
-      <span class="pageNumber"></span>
+      <span>vicusbass.com<span style="margin-left: 4mm;" class="pageNumber"></span></span>
     </div>`,
   })
 } finally {
