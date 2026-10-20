@@ -210,7 +210,7 @@ const html = `<!doctype html>
   .small .card .name { font-size: 11pt; }
   .small .card-role { flex-direction: column; gap: 0.8mm; margin-top: 2mm; padding-bottom: 2mm; }
   .small .card-contact { margin-top: 1.5mm; font-size: 7.5pt; }
-  .partners { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 4mm; }
+  .partners { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 4mm; margin-top: 14mm; }
   .partner { position: relative; display: grid; place-items: center; aspect-ratio: 5 / 2; border: 0.5pt solid #cecac8; break-inside: avoid; }
   .partner.main { grid-column: span 2; }
   .partner img { position: absolute; inset: 0; margin: auto; width: 72%; height: 60%; object-fit: contain; }
@@ -238,7 +238,7 @@ try {
     footerTemplate: `<div style="width: 100%; padding: 0 14mm; display: flex; justify-content: space-between;
       font: 7pt Helvetica, sans-serif; color: #8a8582;">
       <span>${esc(heading)} · ${year}</span>
-      <span><span class="pageNumber"></span> / <span class="totalPages"></span></span>
+      <span class="pageNumber"></span>
     </div>`,
   })
 } finally {
