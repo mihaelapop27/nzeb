@@ -1,8 +1,9 @@
 // Exports the published profiles as an A4 PDF, for sending or printing.
 //
 //   npm run export-pdf [-- profiluri.pdf]            compact list, one profile per row
-//   npm run export-pdf -- --cards [carduri.pdf]      cards, four per page: curators on page 1,
-//                                                    partners on the last page
+//   npm run export-pdf -- --cards [carduri.pdf]      cards: curators on page 1, then six per
+//                                                    page, partners on the last page
+//   npm run export-pdf -- --cards --four [carduri.pdf]  the same, four per page after page 1
 //
 // Runs on demand, on this machine; the site build doesn't need it. Printed with the Google
 // Chrome installed here (playwright-core doesn't download a browser of its own).
@@ -17,6 +18,7 @@ import {CATEGORIES} from '../schemaTypes/person'
 
 const args = process.argv.slice(2)
 const cards = args.includes('--cards')
+const perPage = args.includes('--four') ? 4 : 6
 const file = args.find((a) => !a.startsWith('--')) ?? (cards ? 'profiluri-carduri.pdf' : 'profiluri.pdf')
 const out = path.resolve(file)
 
@@ -93,11 +95,12 @@ const row = (p: Person) => {
   </div>`
 }
 
-const card = (p: Person) => {
-  // Crop around the Studio hotspot (or a little above the middle); the box is ~4:3 (88 × 66 mm on a
-  // four-per-page card), ~250 dpi.
+const card = (p: Person, small: boolean) => {
+  // Crop around the Studio hotspot (or a little above the middle), at ~250 dpi: the box is ~4:3 on a
+  // two-column card (88 × 66 mm), ~3:4 on a three-column one (57 × 76 mm).
+  const [w, h] = small ? [570, 760] : [880, 660]
   const photo = p.photo
-    ? `<img src="${builder.image(withDefaultHotspot(p.photo)).width(880).height(660).fit('crop').auto('format').url()}" alt="">`
+    ? `<img src="${builder.image(withDefaultHotspot(p.photo)).width(w).height(h).fit('crop').auto('format').url()}" alt="">`
     : ''
   return `<div class="card">
     <div class="card-photo">${photo}${p.curator ? '<span class="badge">Curator</span>' : ''}</div>
@@ -111,7 +114,7 @@ const card = (p: Person) => {
 
 // Curators all go on page 1, under the title, and aren't repeated among the others, so nobody
 // is printed twice; past four, their cards shrink to keep them on that page. Everyone else
-// follows, four per page; the partners get the last page to themselves.
+// follows, six per page (four with --four); the partners get the last page to themselves.
 const curators = people.filter((p) => p.curator)
 const others = people.filter((p) => !p.curator)
 const chunk = <T,>(list: T[], size: number) =>
@@ -139,7 +142,7 @@ const header = `<header>
 const section = (label: string) => `<div class="section"><span>${esc(label)}</span></div>`
 
 const grid = (list: Person[], {cols, height} = {cols: 2, height: ROW}) =>
-  `<div class="grid${cols > 2 ? ' small' : ''}" style="grid-template-columns: repeat(${cols}, minmax(0, 1fr)); grid-auto-rows: ${height}mm">${list.map(card).join('')}</div>`
+  `<div class="grid${cols > 2 ? ' small' : ''}" style="grid-template-columns: repeat(${cols}, minmax(0, 1fr)); grid-auto-rows: ${height}mm">${list.map((p) => card(p, cols > 2)).join('')}</div>`
 
 const partnerTile = (p: Partner) => {
   const tag = p.website ? 'a' : 'div'
@@ -153,12 +156,12 @@ const partnersSection = partners.length
   ? `${section('Parteneri')}<div class="partners">${partners.map(partnerTile).join('')}</div>`
   : ''
 
-const otherPages = chunk(others, 4)
+const otherPages = chunk(others, perPage)
 const pages = [
   ...(curators.length ? [`${header}${section('Curatori')}${grid(curators, curatorGrid())}`] : []),
   ...otherPages.map(
     (group, i) =>
-      `${curators.length || i ? '' : header}${section('Arhitecți & Designeri')}${grid(group)}`,
+      `${curators.length || i ? '' : header}${section('Arhitecți & Designeri')}${grid(group, {cols: perPage / 2, height: ROW})}`,
   ),
   ...(partnersSection ? [partnersSection] : []),
 ]
@@ -209,6 +212,8 @@ const html = `<!doctype html>
   .small .card-body { padding: 3mm 3.5mm; }
   .small .card .name { font-size: 11pt; }
   .small .card-role { flex-direction: column; gap: 0.8mm; margin-top: 2mm; padding-bottom: 2mm; }
+  /* Room for a two-line role ("Arhitect · Designer de interior"), so the photos in a row line up. */
+  .small .card-role span:first-child { min-height: 2.6em; }
   .small .card-contact { margin-top: 1.5mm; font-size: 7.5pt; }
   .partners { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 4mm; margin-top: 14mm; }
   .partner { position: relative; display: grid; place-items: center; aspect-ratio: 5 / 2; border: 0.5pt solid #cecac8; break-inside: avoid; }
