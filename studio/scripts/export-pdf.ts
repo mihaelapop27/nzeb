@@ -170,10 +170,12 @@ const lastGroup = others.length % perPage || perPage
 const lastRows = Math.ceil(lastGroup / cols)
 const lastHeight =
   (curators.length || otherPages.length > 1 ? 0 : 37) + 13 + lastRows * ROW + (lastRows - 1) * GAP
-// Sharing the page, the partners sit 14 mm further down (see .grid + .section), apart from the
-// people above.
+// Sharing the page, the partners sit at its foot (see .fill), at least 14 mm below the people.
 const partnersFit = otherPages.length > 0 && lastHeight + 14 + partnersHeight <= 267
-if (partnersSection && partnersFit) otherPages[otherPages.length - 1] += partnersSection
+if (partnersSection && partnersFit) {
+  const last = otherPages.length - 1
+  otherPages[last] = `<div class="fill">${otherPages[last]}<div class="foot">${partnersSection}</div></div>`
+}
 
 const pages = [
   ...(curators.length ? [`${header}${section('Curatori')}${grid(curators, curatorGrid())}`] : []),
@@ -231,10 +233,12 @@ const html = `<!doctype html>
   .small .card-role span:first-child { min-height: 2.6em; }
   .small .card-contact { margin-top: 1.5mm; font-size: 7.5pt; }
   .partners { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 4mm; margin-top: 14mm; }
-  /* Under the last profiles rather than alone on a page: the room goes above the heading, so
-     the partners stand apart from the people, not between the heading and the logos. */
-  .grid + .section { margin-top: 20mm; }
-  .grid ~ .partners { margin-top: 0; }
+  /* Partners under the last profiles: pushed to the foot of the page (a hair under the 267 mm
+     printable height, so rounding can't spill a blank page), without the extra room above the
+     logos that a page of their own gets. */
+  .fill { display: flex; flex-direction: column; height: 265mm; }
+  .foot { margin-top: auto; }
+  .foot .partners { margin-top: 0; }
   .partner { position: relative; display: grid; place-items: center; aspect-ratio: 5 / 2; border: 0.5pt solid #cecac8; break-inside: avoid; }
   .partner.main { grid-column: span 2; }
   .partner img { position: absolute; inset: 0; margin: auto; width: 72%; height: 60%; object-fit: contain; }
