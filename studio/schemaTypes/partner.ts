@@ -21,7 +21,10 @@ export const partner = defineType({
       name: 'logo',
       title: 'Logo',
       type: 'image',
-      description: 'Afișat pe fundal alb; un PNG sau SVG cu fundal transparent arată cel mai bine.',
+      // Crop, so a logo delivered with wide white margins can be trimmed to the same size as the rest.
+      options: {hotspot: true},
+      description:
+        'Afișat pe fundal alb; un PNG sau SVG cu fundal transparent arată cel mai bine. Dacă imaginea are margini albe mari, decupează-le (butonul de decupare), altfel logo-ul apare mai mic decât celelalte.',
       validation: (rule) => rule.required(),
     }),
     defineField({

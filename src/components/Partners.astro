@@ -31,11 +31,12 @@ const tiles = PARTNERS.map((p) => {
             {...p.link}
             data-reveal=""
             class:list={[
-              'relative box-content grid translate-y-4 place-items-center border border-transparent bg-ardi-paper opacity-0 shadow-[4px_4px_0_0_var(--color-ardi-stone)] transition-[opacity,translate] duration-600 ease-reveal data-revealed:translate-y-0 data-revealed:opacity-100',
+              'relative box-content block translate-y-4 border border-transparent bg-ardi-paper opacity-0 shadow-[4px_4px_0_0_var(--color-ardi-stone)] transition-[opacity,translate] duration-600 ease-reveal data-revealed:translate-y-0 data-revealed:opacity-100',
               p.main ? 'col-span-2 aspect-5/2 md:row-span-2 md:aspect-auto' : 'aspect-5/2',
             ]}
           >
-            <img src={p.src} srcset={p.srcset} alt={p.name} loading="lazy" decoding="async" class="block h-[60%] w-[72%] object-contain" />
+            {/* Out of the flow, so a tall logo can't stretch its tile past the 5:2 box. */}
+            <img src={p.src} srcset={p.srcset} alt={p.name} loading="lazy" decoding="async" class="absolute inset-0 m-auto block h-[60%] w-[72%] object-contain" />
             {
               p.main && (
                 <span class="absolute top-0 right-0 bg-ardi-blue px-3 py-[7px] text-[10.5px] leading-none font-bold tracking-[.14em] text-ardi-paper uppercase">
