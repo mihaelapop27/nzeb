@@ -10,8 +10,9 @@ export const HOME = await getHomePage();
 /** Directory profiles, alphabetical. Filtering happens client-side and never changes the order. */
 export const PEOPLE: Person[] = await getPeople();
 
-// Curators are shown with their full directory profile, but never sorted or counted with the directory.
+// Curators are shown only in their own section, above the directory, never repeated in it.
 export const CURATORS = PEOPLE.filter((p) => p.curator);
+export const DIRECTORY = PEOPLE.filter((p) => !p.curator);
 
 export const CITIES = [...new Set(PEOPLE.map((p) => p.city))].sort((a, b) => a.localeCompare(b, 'ro'));
 

@@ -1,5 +1,5 @@
 ---
-import { CURATORS, HOME, JUMP_LINKS, PEOPLE } from '../data/people';
+import { CURATORS, DIRECTORY, HOME, JUMP_LINKS } from '../data/people';
 import { profilesLabel } from '../data/labels';
 import PersonCard from './PersonCard.astro';
 import PersonRow from './PersonRow.astro';
@@ -67,6 +67,6 @@ const subhead = 'max-w-[560px] font-subhead text-[clamp(19px,1.7vw,26px)] leadin
     class="mt-10 flex justify-between gap-4 border-t border-ardi-stone pt-3.5 text-[11px] tracking-[.12em] whitespace-nowrap text-ardi-slate uppercase md:mt-[60px] [:has(>[data-curators][hidden])+&]:mt-0"
   >
     <span class="text-[11px] font-bold tracking-[.14em] text-ardi-blue uppercase">Arhitecți & Designeri</span>
-    <span data-count>{profilesLabel(PEOPLE.length)}</span>
+    <span data-count>{profilesLabel(DIRECTORY.length)}</span>
   </div>
 </section>
