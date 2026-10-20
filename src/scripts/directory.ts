@@ -11,10 +11,11 @@ const $$ = <T extends Element = HTMLElement>(sel: string, root: ParentNode = doc
 const setText = (sel: string, text: string) => $$(sel).forEach((el) => (el.textContent = text));
 
 const matches = (el: HTMLElement) => {
-  const { name = '', studio = '', category, city } = el.dataset;
+  const { name = '', studio = '', categories = '', city } = el.dataset;
   const q = state.q.trim().toLowerCase();
   return (
-    (state.cat === 'all' || category === state.cat) &&
+    // Someone who is both architect and designer shows up under either role.
+    (state.cat === 'all' || categories.split('|').includes(state.cat)) &&
     (state.city === 'all' || city === state.city) &&
     (!q || name.toLowerCase().includes(q) || studio.toLowerCase().includes(q))
   );

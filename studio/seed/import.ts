@@ -50,7 +50,7 @@ for (const p of people) {
     _type: 'person',
     name: p.name,
     studio: p.studio,
-    category: p.category,
+    categories: [p.category],
     curator: p.curator,
     city: ref(cityIds.get(p.city)!),
     photo: {_type: 'image', asset: ref(await uploadPhoto(p.photo))},

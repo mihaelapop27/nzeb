@@ -10,6 +10,7 @@ import {createImageUrlBuilder, type SanityImageSource} from '@sanity/image-url'
 import {chromium} from 'playwright-core'
 import {getCliClient} from 'sanity/cli'
 import {profilesLabel} from '../../src/data/labels'
+import {CATEGORIES} from '../schemaTypes/person'
 
 const file = process.argv.slice(2).find((a) => !a.startsWith('--')) ?? 'profiluri.pdf'
 const out = path.resolve(file)
@@ -19,7 +20,7 @@ const builder = createImageUrlBuilder(client)
 
 type Person = {
   name: string
-  category: string
+  categories: string[]
   curator: boolean
   city: string | null
   photo: SanityImageSource | null
@@ -31,7 +32,7 @@ type Person = {
 const {title, people} = await client.fetch<{title: string | null; people: Person[]}>(`{
   "title": *[_id == "homePage"][0].title,
   "people": *[_type == "person"]{
-    name, category, "curator": curator == true, "city": city->name, photo, phone, email, website
+    name, "categories": coalesce(categories, [category]), "curator": curator == true, "city": city->name, photo, phone, email, website
   }
 }`)
 // Sorted here, as on the site: GROQ orders by code point, which would put "Ștefan" after "Z".
@@ -46,6 +47,12 @@ const bareUrl = (url: string) => url.replace(/^https?:\/\/(www\.)?/i, '').replac
 const logo = readFileSync(new URL('../../src/assets/logo/ardi-logo-lockup.png', import.meta.url))
 const date = new Date().toLocaleDateString('ro-RO', {day: 'numeric', month: 'long', year: 'numeric'})
 const heading = title ?? 'Arhitecți & Designeri'
+
+// In the schema's order (Arhitect first), whatever order they were ticked in the Studio.
+const roles = (categories: string[]) =>
+  CATEGORIES.filter((c) => categories.includes(c.value))
+    .map((c) => c.title)
+    .join(' · ')
 
 const row = (p: Person) => {
   // Square crop around the Studio hotspot, at ~3× the printed size.
@@ -64,7 +71,7 @@ const row = (p: Person) => {
     ${photo}
     <div>
       <div class="name">${esc(p.name)}${p.curator ? '<span class="badge">Curator</span>' : ''}</div>
-      <div class="role">${esc(p.category)}${p.city ? `<span>${esc(p.city)}</span>` : ''}</div>
+      <div class="role">${esc(roles(p.categories))}${p.city ? `<span>${esc(p.city)}</span>` : ''}</div>
     </div>
     <div class="contact">${contact}</div>
   </div>`

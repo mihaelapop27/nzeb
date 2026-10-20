@@ -21,8 +21,9 @@ export const CATEGORIES = [
   { value: 'Designer de interior', label: 'Designer', longLabel: 'Designeri' },
 ];
 
-// Profiles show the short role name (e.g. "Designer"), as in the header's role picker.
-export const shortCategory = (category: string) => CATEGORIES.find((c) => c.value === category)?.label ?? category;
+// Profiles show the short role names (e.g. "Arhitect · Designer"), as in the header's role picker.
+export const shortCategories = (categories: string[]) =>
+  categories.map((category) => CATEGORIES.find((c) => c.value === category)?.label ?? category).join(' · ');
 
 // Partners are festival-wide, not per city; the main one comes first.
 export const PARTNERS = await getPartners();
