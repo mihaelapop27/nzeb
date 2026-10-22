@@ -1,5 +1,6 @@
 ---
 import { Font } from 'astro:assets';
+import Analytics from '@vercel/analytics/astro';
 import '../styles/global.css';
 
 interface Props {
@@ -64,6 +65,8 @@ const ogImage = new URL('/og.png', Astro.site).href;
       })();
     </script>
     <noscript><style>[data-reveal]{opacity:1!important;translate:none!important}</style></noscript>
+    <!-- Vercel Web Analytics: cookieless page views, only reported on Vercel deployments (needs Analytics enabled on the project). -->
+    <Analytics />
   </head>
   <body>
     <slot />
