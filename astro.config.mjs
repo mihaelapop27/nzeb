@@ -11,8 +11,8 @@ const subsets = ['latin', 'latin-ext'];
 const fallbacks = ['Helvetica Neue', 'Helvetica', 'sans-serif'];
 
 export default defineConfig({
-  // Public address, used for the absolute links in the sitemap. Change it when the site moves to its own domain.
-  site: 'https://nzeb.vercel.app',
+  // Public address, used for canonical/og:url, the sitemap and robots.txt.
+  site: 'https://nzeb.ardi.ro',
 
   fonts: [
     {
